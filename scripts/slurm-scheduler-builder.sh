@@ -8,10 +8,9 @@ if [ $(whoami) != root ]; then
   exit 1
 fi
 echo "Building Slurm scheduler for cloud bursting with Azure CycleCloud"
-
-# Define variables
-echo "Enter the cluster name:"
-read clustername
+echo " "
+# Prompt for Cluster Name
+read -p "Enter Cluster Name: " cluster_name
 
 sched_dir="/sched/$clustername"
 slurm_conf="$sched_dir/slurm.conf"
