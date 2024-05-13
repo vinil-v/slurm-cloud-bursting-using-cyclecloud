@@ -80,7 +80,7 @@ SelectTypeParameters=CR_Core_Memory
 # First we lowercase the cluster name, then replace anything
 # that is not letters, digits and '-' with a '-'
 # eg My Cluster == my-cluster
-ClusterName=hb2
+ClusterName=$clustername
 JobAcctGatherType=jobacct_gather/none
 SlurmctldDebug=debug
 SlurmctldLogFile=/var/log/slurmctld/slurmctld.log
@@ -112,47 +112,6 @@ Include accounting.conf
 # SuspendExcNodes is managed in /etc/slurm/keep_alive.conf
 # see azslurm keep_alive for more information.
 # you can also remove this import to remove support for azslurm keep_alive
-Include keep_alive.conf
-
-SlurmctldHost=slurm-scheduler
-[root@slurm-scheduler ~]# ll /opt/azurehpc/slurm/prolog.sh
--rwxr-xr-x. 1 slurm slurm 825 May 10 08:32 /opt/azurehpc/slurm/prolog.sh
-[root@slurm-scheduler ~]# grep -v '#' /etc/slurm/slurm.conf
-MpiDefault=none
-ProctrackType=proctrack/cgroup
-ReturnToService=2
-PropagateResourceLimits=ALL
-SlurmctldPidFile=/var/run/slurmctld.pid
-SlurmdPidFile=/var/run/slurmd.pid
-SlurmdSpoolDir=/var/spool/slurmd
-SlurmUser=slurm
-StateSaveLocation=/var/spool/slurmctld
-SwitchType=switch/none
-TaskPlugin=task/affinity,task/cgroup
-SchedulerType=sched/backfill
-SelectType=select/cons_tres
-GresTypes=gpu
-SelectTypeParameters=CR_Core_Memory
-ClusterName=hb2
-JobAcctGatherType=jobacct_gather/none
-SlurmctldDebug=debug
-SlurmctldLogFile=/var/log/slurmctld/slurmctld.log
-SlurmctldParameters=idle_on_node_suspend
-SlurmdDebug=debug
-SlurmdLogFile=/var/log/slurmd/slurmd.log
-PrivateData=cloud
-PrologSlurmctld=/opt/azurehpc/slurm/prolog.sh
-TreeWidth=65533
-ResumeTimeout=1800
-SuspendTimeout=600
-SuspendTime=300
-ResumeProgram=/opt/azurehpc/slurm/resume_program.sh
-ResumeFailProgram=/opt/azurehpc/slurm/resume_fail_program.sh
-SuspendProgram=/opt/azurehpc/slurm/suspend_program.sh
-SchedulerParameters=max_switch_wait=24:00:00
-MaxNodeCount=10000
-Include azure.conf
-Include accounting.conf
 Include keep_alive.conf
 EOF
 
