@@ -3,9 +3,12 @@
 # Author : Vinil Vadakkepurakkal
 # Date : 13/5/2024
 
+echo "Building Slurm scheduler for cloud bursting with Azure CycleCloud"
 
 # Define variables
-clustername="hb2"
+echo "Enter the cluster name:"
+read clustername
+
 sched_dir="/sched/$clustername"
 slurm_conf="$sched_dir/slurm.conf"
 munge_key="/etc/munge/munge.key"
