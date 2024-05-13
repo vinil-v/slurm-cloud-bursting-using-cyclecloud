@@ -5,21 +5,43 @@
 # This script is intended to be run on the external Slurm scheduler
 # Author : Vinil Vadakkepurakkal
 # Date : 13/5/2024
-
+set -e
+if [ $(whoami) != root ]; then
+  echo "Please run as root"
+  exit 1
+fi
 
 # CycleCloud variables
-echo "Setting up CycleCloud integration"
+#!/bin/bash
+
+# Prompt user to enter CycleCloud details for Slurm scheduler integration
 echo " "
-echo "Please enter the CycleCloud details to integrate with Slurm scheduler"
+echo "Please enter the CycleCloud details to integrate with the Slurm scheduler"
 echo " "
-echo "Enter the Cluster Name (Cluster used when importing the template in CycleCloud)"
+
+# Prompt for Cluster Name
+echo "Enter the Cluster Name (Cluster used when importing the template in CycleCloud):"
 read cluster_name
-echo "Enter the CycleCloud Username"
+
+# Prompt for CycleCloud Username
+echo "Enter the CycleCloud Username:"
 read username
-echo "Enter the CycleCloud Password"
-read password
-echo "Enter the CycleCloud URL (eg: https://10.222.1.19)"
+
+# Prompt for CycleCloud Password (masked input)
+echo "Enter the CycleCloud Password:"
+read -s password
+
+# Prompt for CycleCloud URL
+echo "Enter the CycleCloud URL (e.g., https://10.222.1.19):"
 read url
+
+# Display summary of entered details
+echo " "
+echo "Summary of entered details:"
+echo "Cluster Name: $cluster_name"
+echo "CycleCloud Username: $username"
+echo "CycleCloud URL: $url"
+
 
 
 # Directory paths
@@ -46,6 +68,8 @@ echo "Initializing autoscaler configuration"
 azslurm initconfig --username "$username" --password "$password" --url "$url" --cluster-name "$cluster_name" --config-dir "$config_dir" --default-resource '{"select": {}, "name": "slurm_gpus", "value": "node.gpu_count"}' > "$slurm_script_dir/autoscale.json"
 
 # Connect and scale
+
+
 echo "Connecting to CycleCloud and scaling resources"
 azslurm connect
 azslurm scale

@@ -5,6 +5,11 @@
 # We need to make sure that we create the proper uid and gid for the user in scheduler.
 # Author : Vinil Vadakkepurakkal
 # Date : 13/5/2024
+set -e
+if [ $(whoami) != root ]; then
+  echo "Please run as root"
+  exit 1
+fi
 
 
 username="vinil"

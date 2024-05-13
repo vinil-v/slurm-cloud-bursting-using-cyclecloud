@@ -2,7 +2,11 @@
 # This script builds a External Slurm scheduler for cloud bursting with Azure CycleCloud
 # Author : Vinil Vadakkepurakkal
 # Date : 13/5/2024
-
+set -e
+if [ $(whoami) != root ]; then
+  echo "Please run as root"
+  exit 1
+fi
 echo "Building Slurm scheduler for cloud bursting with Azure CycleCloud"
 
 # Define variables
@@ -12,7 +16,7 @@ read clustername
 sched_dir="/sched/$clustername"
 slurm_conf="$sched_dir/slurm.conf"
 munge_key="/etc/munge/munge.key"
-
+slurm_script_dir="/opt/azurehpc/slurm"
 
 # Create Munge and Slurm users
 echo "Creating Munge and Slurm users"
@@ -116,7 +120,7 @@ EOF
 echo "AccountingStorageType=accounting_storage/none" >> "$sched_dir/accounting.conf"
 
 # Set permissions and create symlinks
-chown -R slurm:slurm "$sched_dir"
+chown  slurm:slurm "$sched_dir"
 chmod 644 "$sched_dir"/*.conf
 ln -s "$slurm_conf" /etc/slurm/slurm.conf
 ln -s "$sched_dir/keep_alive.conf" /etc/slurm/keep_alive.conf
@@ -124,6 +128,9 @@ ln -s "$sched_dir/cgroup.conf" /etc/slurm/cgroup.conf
 ln -s "$sched_dir/accounting.conf" /etc/slurm/accounting.conf
 ln -s "$sched_dir/azure.conf" /etc/slurm/azure.conf
 ln -s "$sched_dir/gres.conf" /etc/slurm/gres.conf 
+touch "$sched_dir"/gres.conf "$sched_dir"/azure.conf
+chown slurm: "$sched_dir"/gres.conf "$sched_dir"/azure.conf
+chmod 644 "$sched_dir"/gres.conf "$sched_dir"/azure.conf
 chown slurm:slurm /etc/slurm/*.conf
 
 # Set up log and spool directories
@@ -131,5 +138,6 @@ mkdir -p /var/spool/slurmd /var/spool/slurmctld /var/log/slurmd /var/log/slurmct
 chown slurm:slurm /var/spool/slurmd /var/spool/slurmctld /var/log/slurmd /var/log/slurmctld
 echo "Slurm installed and configured"
 echo "Slurm scheduler setup complete"
-
-echo "Now proceed to run the cyclecloud-integrator.sh script to complete the integration with CycleCloud."
+echo " "
+echo " Go to CycleCloud Portal and edit the $clustername cluster configuration to use the external scheduler and start the cluster."
+echo " Once the cluster is started, proceed to run the cyclecloud-integrator.sh script to complete the integration with CycleCloud."
