@@ -11,7 +11,7 @@ if [ $(whoami) != root ]; then
   exit 1
 fi
 
-
+# test user details
 username="vinil"
 gid=20001
 uid=20001

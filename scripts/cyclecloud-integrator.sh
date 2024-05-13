@@ -38,9 +38,6 @@ echo "Cluster Name: $cluster_name"
 echo "CycleCloud Username: $username"
 echo "CycleCloud URL: $url"
 
-
-
-
 # Directory paths
 slurm_script_dir="/opt/azurehpc/slurm"
 config_dir="/sched/$cluster_name"
@@ -65,7 +62,6 @@ echo "Initializing autoscaler configuration"
 azslurm initconfig --username "$username" --password "$password" --url "$url" --cluster-name "$cluster_name" --config-dir "$config_dir" --default-resource '{"select": {}, "name": "slurm_gpus", "value": "node.gpu_count"}' > "$slurm_script_dir/autoscale.json"
 
 # Connect and scale
-
 
 echo "Connecting to CycleCloud and scaling resources"
 azslurm connect

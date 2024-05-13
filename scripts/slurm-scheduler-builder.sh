@@ -138,8 +138,7 @@ EOF
 echo "AccountingStorageType=accounting_storage/none" >> "$sched_dir/accounting.conf"
 
 # Set permissions and create symlinks
-chown  slurm:slurm "$sched_dir"
-chmod 644 "$sched_dir"/*.conf
+
 ln -s "$slurm_conf" /etc/slurm/slurm.conf
 ln -s "$sched_dir/keep_alive.conf" /etc/slurm/keep_alive.conf
 ln -s "$sched_dir/cgroup.conf" /etc/slurm/cgroup.conf
@@ -147,8 +146,8 @@ ln -s "$sched_dir/accounting.conf" /etc/slurm/accounting.conf
 ln -s "$sched_dir/azure.conf" /etc/slurm/azure.conf
 ln -s "$sched_dir/gres.conf" /etc/slurm/gres.conf 
 touch "$sched_dir"/gres.conf "$sched_dir"/azure.conf
-chown slurm: "$sched_dir"/gres.conf "$sched_dir"/azure.conf
-chmod 644 "$sched_dir"/gres.conf "$sched_dir"/azure.conf
+chown  slurm:slurm "$sched_dir"/*.conf
+chmod 644 "$sched_dir"/*.conf
 chown slurm:slurm /etc/slurm/*.conf
 
 # Set up log and spool directories
