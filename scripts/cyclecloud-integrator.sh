@@ -11,29 +11,25 @@ if [ $(whoami) != root ]; then
   exit 1
 fi
 
-# CycleCloud variables
 #!/bin/bash
 
 # Prompt user to enter CycleCloud details for Slurm scheduler integration
-echo " "
 echo "Please enter the CycleCloud details to integrate with the Slurm scheduler"
-echo " "
+echo "Format: <Cluster Name> <Username> <Password> <URL>"
+echo "Example: mycluster myusername mypassword https://10.222.1.19"
 
 # Prompt for Cluster Name
-echo "Enter the Cluster Name (Cluster used when importing the template in CycleCloud):"
-read cluster_name
+read -p "Enter Cluster Name: " cluster_name
 
-# Prompt for CycleCloud Username
-echo "Enter the CycleCloud Username:"
-read username
+# Prompt for Username
+read -p "Enter CycleCloud Username: " username
 
-# Prompt for CycleCloud Password (masked input)
-echo "Enter the CycleCloud Password:"
-read -s password
+# Prompt for Password (masked input)
+read -s -p "Enter CycleCloud Password: " password
+echo ""  # Move to a new line after password input
 
-# Prompt for CycleCloud URL
-echo "Enter the CycleCloud URL (e.g., https://10.222.1.19):"
-read url
+# Prompt for URL
+read -p "Enter CycleCloud URL (e.g., https://10.222.1.19): " url
 
 # Display summary of entered details
 echo " "
@@ -41,6 +37,7 @@ echo "Summary of entered details:"
 echo "Cluster Name: $cluster_name"
 echo "CycleCloud Username: $username"
 echo "CycleCloud URL: $url"
+
 
 
 
