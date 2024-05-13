@@ -12,20 +12,26 @@ munge_key="/etc/munge/munge.key"
 
 
 # Create Munge and Slurm users
+echo "Creating Munge and Slurm users"
 groupadd -g 11101 munge
 useradd -u 11101 -g 11101 -s /bin/false -M munge
 groupadd -g 11100 slurm
 useradd -u 11100 -g 11100 -s /bin/false -M slurm
+echo "Munge and Slurm users created"
 
 # Set up NFS server
+echo "Setting up NFS server"
 yum install -y nfs-utils
 mkdir -p /sched /shared
 echo "/sched *(rw,sync,no_root_squash)" >> /etc/exports
 echo "/shared *(rw,sync,no_root_squash)" >> /etc/exports
 systemctl start nfs-server.service
 systemctl enable nfs-server.service
+echo "NFS server setup complete"
+showmount -e localhost
 
 # Install and configure Munge
+echo "Installing and configuring Munge"
 yum install -y epel-release
 yum install -y munge munge-libs munge-devel
 dd if=/dev/urandom bs=1 count=1024 > "$munge_key"
@@ -37,8 +43,10 @@ mkdir -p "$sched_dir"
 cp "$munge_key" "$sched_dir/munge.key"
 chown munge: "$sched_dir/munge.key"
 chmod 400 "$sched_dir/munge.key"
+echo "Munge installed and configured"
 
 # Install and configure Slurm
+echo "Installing and configuring Slurm"
 wget https://github.com/Azure/cyclecloud-slurm/releases/download/3.0.6/azure-slurm-install-pkg-3.0.6.tar.gz
 tar -xvf azure-slurm-install-pkg-3.0.6.tar.gz
 cd azure-slurm-install/slurm-pkgs-rhel8/RPMS/
@@ -118,3 +126,7 @@ chown slurm:slurm /etc/slurm/*.conf
 # Set up log and spool directories
 mkdir -p /var/spool/slurmd /var/spool/slurmctld /var/log/slurmd /var/log/slurmctld
 chown slurm:slurm /var/spool/slurmd /var/spool/slurmctld /var/log/slurmd /var/log/slurmctld
+echo "Slurm installed and configured"
+echo "Slurm scheduler setup complete"
+
+echo "Now proceed to run the cyclecloud-integrator.sh script to complete the integration with CycleCloud."

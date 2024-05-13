@@ -3,6 +3,9 @@
 # Make sure to replace the username, gid, and uid with the desired values
 # In Cyclecloud, user is created with the username 'vinil' and uid and gid are 20001
 # We need to make sure that we create the proper uid and gid for the user in scheduler.
+# Author : Vinil Vadakkepurakkal
+# Date : 13/5/2024
+
 
 username="vinil"
 gid=20001
