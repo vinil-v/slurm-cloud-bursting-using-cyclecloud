@@ -82,7 +82,7 @@ azslurm connect
 azslurm scale --no-restart
 chown -R slurm:slurm "$slurm_script_dir"/logs/*.log
 systemctl restart slurmctld
-eccho " "
+echo " "
 echo "------------------------------------------------------------------------------------------------------------------------------"
 echo "Slurm scheduler integration with CycleCloud completed successfully"
 echo " Create User and Group for job submission. Make sure that GID and UID is consistent across all nodes and home directory is shared"
