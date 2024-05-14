@@ -84,7 +84,7 @@ SelectTypeParameters=CR_Core_Memory
 # First we lowercase the cluster name, then replace anything
 # that is not letters, digits and '-' with a '-'
 # eg My Cluster == my-cluster
-cluster_name=$cluster_name
+ClusterName=$cluster_name
 JobAcctGatherType=jobacct_gather/none
 SlurmctldDebug=debug
 SlurmctldLogFile=/var/log/slurmctld/slurmctld.log
