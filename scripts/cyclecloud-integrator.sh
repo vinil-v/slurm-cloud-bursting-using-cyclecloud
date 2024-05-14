@@ -55,7 +55,9 @@ echo "Downloading and installing CycleCloud Slurm integration package"
 wget https://github.com/Azure/cyclecloud-slurm/releases/download/3.0.6/azure-slurm-pkg-3.0.6.tar.gz -P "$slurm_script_dir"
 tar -xvf "$slurm_script_dir/azure-slurm-pkg-3.0.6.tar.gz" -C "$slurm_script_dir"
 cd "$slurm_script_dir/azure-slurm"
-./install.sh
+head -n -30 install.sh > integrate-cc.sh
+chmod +x integrate-cc.sh
+./integrate-cc.sh
 
 # Initialize autoscaler configuration
 echo "Initializing autoscaler configuration"

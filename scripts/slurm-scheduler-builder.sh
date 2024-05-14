@@ -12,7 +12,12 @@ echo " "
 # Prompt for Cluster Name
 read -p "Enter Cluster Name: " cluster_name
 
-sched_dir="/sched/$clustername"
+echo " "
+echo "Summary of entered details:"
+echo "Cluster Name: $cluster_name"
+echo " "
+
+sched_dir="/sched/$cluster_name"
 slurm_conf="$sched_dir/slurm.conf"
 munge_key="/etc/munge/munge.key"
 slurm_script_dir="/opt/azurehpc/slurm"
@@ -75,11 +80,11 @@ SchedulerType=sched/backfill
 SelectType=select/cons_tres
 GresTypes=gpu
 SelectTypeParameters=CR_Core_Memory
-# We use a "safe" form of the CycleCloud ClusterName throughout slurm.
+# We use a "safe" form of the CycleCloud cluster_name throughout slurm.
 # First we lowercase the cluster name, then replace anything
 # that is not letters, digits and '-' with a '-'
 # eg My Cluster == my-cluster
-ClusterName=$clustername
+cluster_name=$cluster_name
 JobAcctGatherType=jobacct_gather/none
 SlurmctldDebug=debug
 SlurmctldLogFile=/var/log/slurmctld/slurmctld.log
@@ -152,8 +157,8 @@ chown slurm:slurm /etc/slurm/*.conf
 # Set up log and spool directories
 mkdir -p /var/spool/slurmd /var/spool/slurmctld /var/log/slurmd /var/log/slurmctld
 chown slurm:slurm /var/spool/slurmd /var/spool/slurmctld /var/log/slurmd /var/log/slurmctld
-echo "Slurm installed and configured"
+echo " "
 echo "Slurm scheduler setup complete"
 echo " "
-echo " Go to CycleCloud Portal and edit the $clustername cluster configuration to use the external scheduler and start the cluster."
+echo " Go to CycleCloud Portal and edit the $cluster_name cluster configuration to use the external scheduler and start the cluster."
 echo " Once the cluster is started, proceed to run the cyclecloud-integrator.sh script to complete the integration with CycleCloud."
