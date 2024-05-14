@@ -56,6 +56,8 @@ cd "$slurm_script_dir/azure-slurm"
 head -n -30 install.sh > integrate-cc.sh
 chmod +x integrate-cc.sh
 ./integrate-cc.sh
+#cleanup
+rm -rf azure-slurm*
 
 # Initialize autoscaler configuration
 echo "Initializing autoscaler configuration"
@@ -66,4 +68,5 @@ chown -R slurm:slurm "$slurm_script_dir"
 
 echo "Connecting to CycleCloud and scaling resources"
 azslurm connect
-azslurm scale
+azslurm scale --no-restart
+chown -R slurm:slurm "$slurm_script_dir"/logs/*.log
