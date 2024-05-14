@@ -7,15 +7,22 @@ if [ $(whoami) != root ]; then
   echo "Please run as root"
   exit 1
 fi
+echo "------------------------------------------------------------------------------------------------------------------------------"
 echo "Building Slurm scheduler for cloud bursting with Azure CycleCloud"
+echo "------------------------------------------------------------------------------------------------------------------------------"
 echo " "
 # Prompt for Cluster Name
 read -p "Enter Cluster Name: " cluster_name
 
+ip_address=$(hostname -I | awk '{print $1}')
+echo "------------------------------------------------------------------------------------------------------------------------------"
 echo " "
 echo "Summary of entered details:"
 echo "Cluster Name: $cluster_name"
+echo "Scheduler Hostname: $(hostname)"
+echo "NFSServer IP Address: $ip_address"
 echo " "
+echo "------------------------------------------------------------------------------------------------------------------------------"
 
 sched_dir="/sched/$cluster_name"
 slurm_conf="$sched_dir/slurm.conf"
@@ -23,7 +30,10 @@ munge_key="/etc/munge/munge.key"
 slurm_script_dir="/opt/azurehpc/slurm"
 
 # Create Munge and Slurm users
+echo "------------------------------------------------------------------------------------------------------------------------------"
 echo "Creating Munge and Slurm users"
+echo "------------------------------------------------------------------------------------------------------------------------------"
+
 groupadd -g 11101 munge
 useradd -u 11101 -g 11101 -s /bin/false -M munge
 groupadd -g 11100 slurm
@@ -31,7 +41,9 @@ useradd -u 11100 -g 11100 -s /bin/false -M slurm
 echo "Munge and Slurm users created"
 
 # Set up NFS server
+echo "------------------------------------------------------------------------------------------------------------------------------"
 echo "Setting up NFS server"
+echo "------------------------------------------------------------------------------------------------------------------------------"
 yum install -y nfs-utils
 mkdir -p /sched /shared
 echo "/sched *(rw,sync,no_root_squash)" >> /etc/exports
@@ -42,7 +54,9 @@ echo "NFS server setup complete"
 showmount -e localhost
 
 # Install and configure Munge
+echo "------------------------------------------------------------------------------------------------------------------------------"
 echo "Installing and configuring Munge"
+echo "------------------------------------------------------------------------------------------------------------------------------"
 yum install -y epel-release
 yum install -y munge munge-libs munge-devel
 dd if=/dev/urandom bs=1 count=1024 > "$munge_key"
@@ -54,16 +68,28 @@ mkdir -p "$sched_dir"
 cp "$munge_key" "$sched_dir/munge.key"
 chown munge: "$sched_dir/munge.key"
 chmod 400 "$sched_dir/munge.key"
+echo "------------------------------------------------------------------------------------------------------------------------------"
 echo "Munge installed and configured"
+echo "------------------------------------------------------------------------------------------------------------------------------"
 
 # Install and configure Slurm
-echo "Installing and configuring Slurm"
+echo "------------------------------------------------------------------------------------------------------------------------------"
+echo "Installing Slurm"
+echo "------------------------------------------------------------------------------------------------------------------------------"
 wget https://github.com/Azure/cyclecloud-slurm/releases/download/3.0.6/azure-slurm-install-pkg-3.0.6.tar.gz
 tar -xvf azure-slurm-install-pkg-3.0.6.tar.gz
 cd azure-slurm-install/slurm-pkgs-rhel8/RPMS/
 yum localinstall slurm-*-23.02.7-1.el8.x86_64.rpm -y
+echo "------------------------------------------------------------------------------------------------------------------------------"
+echo "Slurm installed"
+echo "------------------------------------------------------------------------------------------------------------------------------"
+
 
 # Configure Slurm
+echo "------------------------------------------------------------------------------------------------------------------------------"
+echo "Configuring Slurm"
+echo "------------------------------------------------------------------------------------------------------------------------------"
+
 cat <<EOF > "$slurm_conf"
 MpiDefault=none
 ProctrackType=proctrack/cgroup
@@ -158,7 +184,12 @@ chown slurm:slurm /etc/slurm/*.conf
 mkdir -p /var/spool/slurmd /var/spool/slurmctld /var/log/slurmd /var/log/slurmctld
 chown slurm:slurm /var/spool/slurmd /var/spool/slurmctld /var/log/slurmd /var/log/slurmctld
 echo " "
-echo "Slurm scheduler setup complete"
+echo "------------------------------------------------------------------------------------------------------------------------------"
+echo "Slurm configured"
+echo "------------------------------------------------------------------------------------------------------------------------------"
 echo " "
+echo "------------------------------------------------------------------------------------------------------------------------------"
 echo " Go to CycleCloud Portal and edit the $cluster_name cluster configuration to use the external scheduler and start the cluster."
-echo " Once the cluster is started, proceed to run the cyclecloud-integrator.sh script to complete the integration with CycleCloud."
+echo " Use $ip_address IP Address for File-system Mount for /sched and /shared in Network Attached Storage section in CycleCloud GUI "
+echo " Once the cluster is started, proceed to run  cyclecloud-integrator.sh script to complete the integration with CycleCloud."
+echo "------------------------------------------------------------------------------------------------------------------------------"

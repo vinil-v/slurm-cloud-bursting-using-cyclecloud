@@ -11,8 +11,6 @@ if [ $(whoami) != root ]; then
   exit 1
 fi
 
-#!/bin/bash
-
 # Prompt user to enter CycleCloud details for Slurm scheduler integration
 echo "Please enter the CycleCloud details to integrate with the Slurm scheduler"
 echo " "
@@ -30,11 +28,14 @@ echo ""  # Move to a new line after password input
 read -p "Enter CycleCloud URL (e.g., https://10.222.1.19): " url
 
 # Display summary of entered details
+echo "------------------------------------------------------------------------------------------------------------------------------"
 echo " "
 echo "Summary of entered details:"
 echo "Cluster Name: $cluster_name"
 echo "CycleCloud Username: $username"
 echo "CycleCloud URL: $url"
+echo " "
+echo "------------------------------------------------------------------------------------------------------------------------------"
 
 # Directory paths
 slurm_script_dir="/opt/azurehpc/slurm"
@@ -44,12 +45,17 @@ config_dir="/sched/$cluster_name"
 mkdir -p "$slurm_script_dir"
 
 # Activate Python virtual environment for Slurm integration
+echo "------------------------------------------------------------------------------------------------------------------------------"
 echo "Configuring virtual enviornment and Activating Python virtual environment"
+echo "------------------------------------------------------------------------------------------------------------------------------"
 python3 -m venv "$slurm_script_dir/venv"
 source "$slurm_script_dir/venv/bin/activate"
 
 # Download and install CycleCloud Slurm integration package
+echo "------------------------------------------------------------------------------------------------------------------------------"
 echo "Downloading and installing CycleCloud Slurm integration package"
+echo "------------------------------------------------------------------------------------------------------------------------------"
+
 wget https://github.com/Azure/cyclecloud-slurm/releases/download/3.0.6/azure-slurm-pkg-3.0.6.tar.gz -P "$slurm_script_dir"
 tar -xvf "$slurm_script_dir/azure-slurm-pkg-3.0.6.tar.gz" -C "$slurm_script_dir"
 cd "$slurm_script_dir/azure-slurm"
@@ -60,14 +66,25 @@ chmod +x integrate-cc.sh
 rm -rf azure-slurm*
 
 # Initialize autoscaler configuration
+echo "------------------------------------------------------------------------------------------------------------------------------"
 echo "Initializing autoscaler configuration"
+echo "------------------------------------------------------------------------------------------------------------------------------"
+
 azslurm initconfig --username "$username" --password "$password" --url "$url" --cluster-name "$cluster_name" --config-dir "$config_dir" --default-resource '{"select": {}, "name": "slurm_gpus", "value": "node.gpu_count"}' > "$slurm_script_dir/autoscale.json"
 chown slurm:slurm "$slurm_script_dir/autoscale.json"
 chown -R slurm:slurm "$slurm_script_dir"
 # Connect and scale
-
+echo "------------------------------------------------------------------------------------------------------------------------------"
 echo "Connecting to CycleCloud and scaling resources"
+echo "------------------------------------------------------------------------------------------------------------------------------"
+
 azslurm connect
 azslurm scale --no-restart
 chown -R slurm:slurm "$slurm_script_dir"/logs/*.log
 systemctl restart slurmctld
+eccho " "
+echo "------------------------------------------------------------------------------------------------------------------------------"
+echo "Slurm scheduler integration with CycleCloud completed successfully"
+echo " Create User and Group for job submission. Make sure that GID and UID is consistent across all nodes and home directory is shared"
+echo "------------------------------------------------------------------------------------------------------------------------------"
+echo " "
