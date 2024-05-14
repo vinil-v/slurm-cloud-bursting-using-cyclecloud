@@ -31,14 +31,6 @@ Autoscale = $Autoscale
         slurm.autoscale_pkg = azure-slurm-pkg-3.0.6.tar.gz
 
         slurm.version = $configuration_slurm_version
-        slurm.accounting.enabled = $configuration_slurm_accounting_enabled
-        slurm.accounting.url = $configuration_slurm_accounting_url
-        slurm.accounting.user = $configuration_slurm_accounting_user
-        slurm.accounting.password = $configuration_slurm_accounting_password
-        slurm.accounting.certificate_url = $configuration_slurm_accounting_certificate_url
-        slurm.additional.config = $additional_slurm_config
-        slurm.ha_enabled = $configuration_slurm_ha_enabled
-        slurm.launch_parameters = $configuration_slurm_launch_parameters
         slurm.disable_pmc = $configuration_slurm_disable_pmc
 
         # Disable ip-XXXXXXXX hostname generation
@@ -173,18 +165,6 @@ Order = 10
         Description = Deployment Location
         ParameterType = Cloud.Region
 
-        [[[parameter SchedulerMachineType]]]
-        Label = Scheduler VM Type
-        Description = The VM type for scheduler node
-        ParameterType = Cloud.MachineType
-        DefaultValue = Standard_D4ads_v5
-
-        [[[parameter loginMachineType]]]
-        Label = Login node VM Type
-        Description = The VM type for login nodes.
-        ParameterType = Cloud.MachineType
-        DefaultValue = Standard_D8as_v4
-
         [[[parameter HPCMachineType]]]
         Label = HPC VM Type
         Description = The VM type for HPC execute nodes
@@ -276,15 +256,6 @@ Order = 10
         Conditions.Excluded := DynamicUseLowPrio isnt true
         Config.MinValue = -1
 
-        [[[parameter NumberLoginNodes]]]
-        Label = Num Login Nodes
-        DefaultValue = 0
-        Description = Number of optional login nodes to create.
-        Config.Plugin = pico.form.NumberTextBox
-        Config.MinValue = 0
-        Config.MaxValue = 10000
-        Config.IntegerOnly = true
-
     [[parameters Networking]]
     Order = 40
 
@@ -293,16 +264,6 @@ Order = 10
         Description = Subnet Resource Path (ResourceGroup/VirtualNetwork/Subnet)
         ParameterType = Azure.Subnet
         Required = True
-
-    [[parameters High Availability]]
-    Order = 50
-    Description = "Slurm can be setup in HA mode - where slurmctld is running on two nodes with failover. Note that checking this box will require an external NFS, so any reference to the 'builtin' NFS will be hidden."
-        [[[parameter configuration_slurm_ha_enabled]]]
-        Label = Slurm HA Node
-        Description = Deploy with an additional HA node
-        DefaultValue = false
-        ParameterType = Boolean
-
 
 [parameters Network Attached Storage]
 Order = 15
@@ -345,7 +306,7 @@ Order = 15
         [[[parameter UseBuiltinSched]]]
         Label = Use Builtin NFS
         Description = Use the builtin NFS for /sched
-        DefaultValue = true
+        DefaultValue = false
         ParameterType = Boolean
         Conditions.Hidden := configuration_slurm_ha_enabled
         Disabled = configuration_slurm_ha_enabled
@@ -555,38 +516,6 @@ Order = 20
         Config.Entries := {[Value="22.05.11-1"], [Value="23.02.7-1"]}
         DefaultValue = 23.02.7-1
 
-        [[[parameter configuration_slurm_accounting_enabled]]]
-        Label = Job Accounting
-        DefaultValue = false
-        Widget.Plugin = pico.form.BooleanCheckBox
-        Widget.Label = Configure Slurm job accounting
-
-        [[[parameter configuration_slurm_accounting_url]]]
-        Label = Slurm DBD URL
-        Description = URL of the database to use for Slurm job accounting
-        Conditions.Excluded := configuration_slurm_accounting_enabled isnt true
-
-        [[[parameter configuration_slurm_accounting_user]]]
-        Label = Slurm DBD User
-        Description = User for Slurm DBD admin
-        Conditions.Excluded := configuration_slurm_accounting_enabled isnt true
-
-        [[[parameter configuration_slurm_accounting_password]]]
-        Label = Slurm DBD Password
-        Description = Password for Slurm DBD admin
-        ParameterType = Password
-        Conditions.Excluded := configuration_slurm_accounting_enabled isnt true
-
-        [[[parameter configuration_slurm_accounting_certificate_url]]]
-        Label = SSL Certificate URL
-        Description = URL to fetch SSL certificate for authentication to DB. Use AzureCA.pem (embedded) for use with deprecated MariaDB instances.
-        Conditions.Excluded := configuration_slurm_accounting_enabled isnt true
-        ParameterType = StringList
-        Config.Plugin = pico.form.Dropdown
-        Config.FreeForm = true
-        Config.Entries := {[Value=""], [Value="AzureCA.pem"]}
-        DefaultValue = ""
-
         [[[parameter configuration_slurm_shutdown_policy]]]
 	    Label = Shutdown Policy
         description = By default, autostop will Delete stopped VMS for lowest cost.  Optionally, Stop/Deallocate the VMs for faster restart instead.
@@ -602,19 +531,6 @@ Order = 20
         [[[parameter EnableTerminateNotification]]]
         Label = Enable Termination notifications
         DefaultValue = False        
-
-        [[[parameter additional_slurm_config]]]
-        Label = Slurm Configuration
-        Description = Any additional lines to add to slurm.conf
-        ParameterType = Text
-	
-        [[[parameter configuration_slurm_launch_parameters]]]
-        Label = Launch Parameters
-        Description = Deploy Slurm with Launch Parameters (comma delimited)
-        DefaultValue = ''
-        ParameterType = String
-
-
 
     [[parameters Software]]
     Description = "Specify the scheduling software, and base OS installed on all nodes, and optionally the cluster-init and chef versions from your locker."
@@ -636,23 +552,6 @@ Order = 20
         Config.Entries := {[Value=""], [Value="Cluster Prefix"]}
         Conditions.Hidden := NodeNameIsHostname != true
 
-        [[[parameter SchedulerHostName]]]
-        Label = Scheduler Hostname
-        Description = Hostname of scheduler. 'Generated' uses the default generated hostname. 'Cluster Prefix' will generate $ClusterName-scheduler.
-        ParameterType = StringList
-        Config.Plugin = pico.form.Dropdown
-        Config.FreeForm = true
-        DefaultValue = "Cluster Prefix"
-        Config.Entries := {[Value="Generated"], [Value="Cluster Prefix"]}
-        Conditions.Hidden := NodeNameIsHostname != true
-
-        [[[parameter SchedulerImageName]]]
-        Label = Scheduler OS
-        ParameterType = Cloud.Image
-        Config.OS = linux
-        DefaultValue = almalinux8
-        Config.Filter := Package in {"cycle.image.centos7", "cycle.image.ubuntu20", "cycle.image.ubuntu22", "cycle.image.sles15-hpc", "almalinux8"}
-
         [[[parameter HPCImageName]]]
         Label = HPC OS
         ParameterType = Cloud.Image
@@ -673,13 +572,7 @@ Order = 20
         Config.OS = linux
         DefaultValue = almalinux8
         Config.Filter := Package in {"cycle.image.centos7", "cycle.image.ubuntu20", "cycle.image.ubuntu22", "cycle.image.sles15-hpc", "almalinux8"}
-
-        [[[parameter SchedulerClusterInitSpecs]]]
-        Label = Scheduler Cluster-Init
-        DefaultValue = =undefined
-        Description = Cluster init specs to apply to the scheduler node
-        ParameterType = Cloud.ClusterInitSpecs
-    
+       
         [[[parameter HTCClusterInitSpecs]]]
         Label = HTC Cluster-Init
         DefaultValue = =undefined
@@ -709,15 +602,9 @@ Order = 20
 
         [[[parameter ReturnProxy]]]
         Label = Return Proxy
-        DefaultValue = true
+        DefaultValue = false
         ParameterType = Boolean
         Config.Label = Use SSH tunnel to connect to CycleCloud (required if direct access is blocked)
-
-        [[[parameter UsePublicNetwork]]]
-        Label = Public Head Node
-        DefaultValue = true
-        ParameterType = Boolean
-        Config.Label = Access scheduler node from the Internet
 
         [[[parameter ExecuteNodesPublic]]]
         Label = Public Execute
@@ -725,21 +612,6 @@ Order = 20
         ParameterType = Boolean
         Config.Label = Access execute nodes from the Internet
         Conditions.Excluded := UsePublicNetwork isnt true
-
-        [[[parameter SchedulerZone]]]
-        Label = Scheduler Zone
-        Description = The availability zone in which to deploy the scheduler node.
-        DefaultValue = =undefined
-        Config.Plugin = pico.form.Dropdown
-        Config.Entries := {[Value=1], [Value=2], [Value=3], [Value=undefined; Label="Any"]}
-
-        [[[parameter SchedulerHAZone]]]
-        Label = Scheduler HA Zone
-        Description = The availability zone in which to deploy the scheduler-ha node.
-        DefaultValue = =undefined
-        Config.Plugin = pico.form.Dropdown
-        Config.Entries := {[Value=1], [Value=2], [Value=3], [Value=undefined; Label="Any"]}
-        Conditions.Hidden := configuration_slurm_ha_enabled isnt true
 
     [[parameters Node Health Checks]]
     Description = "Section for configuring Node Health Checks"
