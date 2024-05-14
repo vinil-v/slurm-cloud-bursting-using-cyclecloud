@@ -61,7 +61,7 @@ chmod +x integrate-cc.sh
 echo "Initializing autoscaler configuration"
 azslurm initconfig --username "$username" --password "$password" --url "$url" --cluster-name "$cluster_name" --config-dir "$config_dir" --default-resource '{"select": {}, "name": "slurm_gpus", "value": "node.gpu_count"}' > "$slurm_script_dir/autoscale.json"
 chown slurm:slurm "$slurm_script_dir/autoscale.json"
-chown -R slurm:slurm "$config_dir"
+chown -R slurm:slurm "$slurm_script_dir"
 # Connect and scale
 
 echo "Connecting to CycleCloud and scaling resources"
