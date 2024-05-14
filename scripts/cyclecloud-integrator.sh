@@ -15,9 +15,7 @@ fi
 
 # Prompt user to enter CycleCloud details for Slurm scheduler integration
 echo "Please enter the CycleCloud details to integrate with the Slurm scheduler"
-echo "Format: <Cluster Name> <Username> <Password> <URL>"
-echo "Example: mycluster myusername mypassword https://10.222.1.19"
-
+echo " "
 # Prompt for Cluster Name
 read -p "Enter Cluster Name: " cluster_name
 
