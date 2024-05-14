@@ -70,3 +70,4 @@ echo "Connecting to CycleCloud and scaling resources"
 azslurm connect
 azslurm scale --no-restart
 chown -R slurm:slurm "$slurm_script_dir"/logs/*.log
+systemctl restart slurmctld
