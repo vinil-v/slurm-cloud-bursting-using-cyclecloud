@@ -40,10 +40,11 @@ Cluster nodes:
 Total nodes: 0
 ```
 
-### 2. On Scheduler VM:
+### 2. Preparing Scheduler VM:
 
-- Deploy a Scheduler VM using the specified AlmaLinux image.
+- Deploy a VM using the specified AlmaLinux image (If you have an existing Slurm Scheduler, you can skip this).
 - Run the Slurm scheduler installation script (`slurm-scheduler-builder.sh`) and provide the cluster name (`hpc1`) when prompted.
+- This script will install and configure Slurm Scheduler.
 
 ```bash
 git clone https://github.com/vinil-v/slurm-cloud-bursting-using-cyclecloud.git
