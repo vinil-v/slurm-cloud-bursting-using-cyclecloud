@@ -24,7 +24,7 @@ Ensure you have the following prerequisites in place:
 
 ```bash
 git clone https://github.com/vinil-v/slurm-cloud-bursting-using-cyclecloud.git
-cyclecloud import_cluster hpc1 -c Slurm-HL -f slurm-cloud-bursting-using-cyclecloud/cyclecloud-template/slurm-headless.txt
+cyclecloud import_cluster hpc1 -c Slurm-HL -f slurm-cloud-bursting-using-cyclecloud/templates/slurm-headless.txt
 ```
 
 Output :
