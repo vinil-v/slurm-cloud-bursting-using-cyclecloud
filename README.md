@@ -71,6 +71,7 @@ NFSServer IP Address: 10.222.1.26
 
 - Access the CycleCloud UI, edit the `hpc1` cluster settings, and configure VM SKUs and networking settings.
 - Enter the NFS server IP address for `/sched` and `/shared` mounts in the Network Attached Storage section.
+- Save & Start `hpc1` cluster
 
 ![NFS settings](images/NFSSettings.png)
 
