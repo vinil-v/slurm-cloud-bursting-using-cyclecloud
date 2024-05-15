@@ -107,7 +107,8 @@ CycleCloud URL: https://10.222.1.19
 ### 5. User and Group Setup:
 
 - Ensure consistent user and group IDs across all nodes.
-- Use the `users.sh` script to create necessary users and groups for job submission.
+- Better to use a centralized User Management system like LDAP to ensure the UID and GID are consistent across all the nodes.
+- In this example we are using the `users.sh` script to create a test user `vinil` and group for job submission. (User `vinil` is exist in CycleCloud)
 
 ```bash
 cd slurm-cloud-bursting-using-cyclecloud/scripts
