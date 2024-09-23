@@ -2,7 +2,7 @@
 # This script builds a External Slurm scheduler for cloud bursting with Azure CycleCloud
 # Author : Vinil Vadakkepurakkal
 # Date : 13/5/2024
-# Modified by : Vinil Vadakkepurakkal on 23/9/2024
+# Modified by : Vinil Vadakkepurakkal on 23/9/2024 
 set -e
 if [ $(whoami) != root ]; then
   echo "Please run as root"
