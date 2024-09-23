@@ -69,7 +69,7 @@ echo "--------------------------------------------------------------------------
 echo "Installing and configuring Munge"
 echo "------------------------------------------------------------------------------------------------------------------------------"
 dnf install -y epel-release
-dnf install -y munge munge-libs munge-devel
+dnf install -y munge munge-libs 
 dd if=/dev/urandom bs=1 count=1024 > "$munge_key"
 chown munge:munge "$munge_key"
 chmod 400 "$munge_key"
