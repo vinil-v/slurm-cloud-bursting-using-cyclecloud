@@ -2,6 +2,7 @@
 # This script builds a External Slurm scheduler for cloud bursting with Azure CycleCloud
 # Author : Vinil Vadakkepurakkal
 # Date : 13/5/2024
+# Modified by : Vinil Vadakkepurakkal on 23/9/2024
 set -e
 if [ $(whoami) != root ]; then
   echo "Please run as root"
@@ -28,6 +29,9 @@ sched_dir="/sched/$cluster_name"
 slurm_conf="$sched_dir/slurm.conf"
 munge_key="/etc/munge/munge.key"
 slurm_script_dir="/opt/azurehpc/slurm"
+OS_VERSION=$(cat /etc/os-release  | grep VERSION_ID | cut -d= -f2 | cut -d\" -f2 | cut -d. -f1)
+OS_ID=$(cat /etc/os-release  | grep ^ID= | cut -d= -f2 | cut -d\" -f2 | cut -d. -f1)
+SLURM_VERSION="23.11.9"
 
 # Create Munge and Slurm users
 echo "------------------------------------------------------------------------------------------------------------------------------"
@@ -53,12 +57,19 @@ systemctl enable nfs-server.service
 echo "NFS server setup complete"
 showmount -e localhost
 
+# setting up Microsoft repo
+echo "------------------------------------------------------------------------------------------------------------------------------"
+curl -sSL -O https://packages.microsoft.com/config/rhel/$OS_VERSION/packages-microsoft-prod.rpm
+rpm -i packages-microsoft-prod.rpm
+rm packages-microsoft-prod.rpm
+echo "Microsoft repo setup complete"
+
 # Install and configure Munge
 echo "------------------------------------------------------------------------------------------------------------------------------"
 echo "Installing and configuring Munge"
 echo "------------------------------------------------------------------------------------------------------------------------------"
-yum install -y epel-release
-yum install -y munge munge-libs munge-devel
+dnf install -y epel-release
+dnf install -y munge munge-libs munge-devel
 dd if=/dev/urandom bs=1 count=1024 > "$munge_key"
 chown munge:munge "$munge_key"
 chmod 400 "$munge_key"
@@ -74,12 +85,26 @@ echo "--------------------------------------------------------------------------
 
 # Install and configure Slurm
 echo "------------------------------------------------------------------------------------------------------------------------------"
-echo "Installing Slurm"
-echo "------------------------------------------------------------------------------------------------------------------------------"
-wget https://github.com/Azure/cyclecloud-slurm/releases/download/3.0.6/azure-slurm-install-pkg-3.0.6.tar.gz
-tar -xvf azure-slurm-install-pkg-3.0.6.tar.gz
-cd azure-slurm-install/slurm-pkgs-rhel8/RPMS/
-yum localinstall slurm-*-23.02.7-1.el8.x86_64.rpm -y
+echo " Setting up Slurm repo"
+cat <<EOF > /etc/yum.repos.d/slurm.repo
+[slurm]
+name=Slurm Workload Manager
+baseurl=https://packages.microsoft.com/yumrepos/slurm-el8-insiders
+enabled=1
+gpgcheck=1
+gpgkey=https://packages.microsoft.com/keys/microsoft.asc
+priority=10
+EOF
+echo "Slurm repo setup complete"
+
+slurm_packages="slurm slurm-slurmrestd slurm-libpmi slurm-devel slurm-pam_slurm slurm-perlapi slurm-torque slurm-openlava slurm-example-configs"
+sched_packages="slurm-slurmctld slurm-slurmdbd"
+for pkg in $slurm_packages; do
+        yum -y install $pkg-${SLURM_VERSION}.el${OS_VERSION} --disableexcludes slurm
+done
+for pkg in $sched_packages; do
+        yum -y install $pkg-${SLURM_VERSION}.el${OS_VERSION} --disableexcludes slurm
+done
 echo "------------------------------------------------------------------------------------------------------------------------------"
 echo "Slurm installed"
 echo "------------------------------------------------------------------------------------------------------------------------------"
