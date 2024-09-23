@@ -31,7 +31,7 @@ munge_key="/etc/munge/munge.key"
 slurm_script_dir="/opt/azurehpc/slurm"
 OS_VERSION=$(cat /etc/os-release  | grep VERSION_ID | cut -d= -f2 | cut -d\" -f2 | cut -d. -f1)
 OS_ID=$(cat /etc/os-release  | grep ^ID= | cut -d= -f2 | cut -d\" -f2 | cut -d. -f1)
-SLURM_VERSION="23.11.9"
+SLURM_VERSION="23.11.9-1"
 
 # Create Munge and Slurm users
 echo "------------------------------------------------------------------------------------------------------------------------------"
@@ -69,7 +69,7 @@ echo "--------------------------------------------------------------------------
 echo "Installing and configuring Munge"
 echo "------------------------------------------------------------------------------------------------------------------------------"
 dnf install -y epel-release
-dnf install -y munge munge-libs munge-devel
+dnf install -y munge munge-libs
 dd if=/dev/urandom bs=1 count=1024 > "$munge_key"
 chown munge:munge "$munge_key"
 chmod 400 "$munge_key"
