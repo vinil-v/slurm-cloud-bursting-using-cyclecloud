@@ -59,11 +59,12 @@ showmount -e localhost
 
 # setting up Microsoft repo
 echo "------------------------------------------------------------------------------------------------------------------------------"
-curl -sSL -O https://packages.microsoft.com/config/rhel/$OS_VERSION/packages-microsoft-prod.rpm
-rpm -i packages-microsoft-prod.rpm
-rm packages-microsoft-prod.rpm
-echo "Microsoft repo setup complete"
-
+if [ ! -e /etc/yum.repos.d/microsoft-prod.repo ];then
+   curl -sSL -O https://packages.microsoft.com/config/rhel/$OS_VERSION/packages-microsoft-prod.rpm        
+   rpm -i packages-microsoft-prod.rpm
+   rm -rf packages-microsoft-prod.rpm
+   echo "Microsoft repo setup complete"
+fi
 # Install and configure Munge
 echo "------------------------------------------------------------------------------------------------------------------------------"
 echo "Installing and configuring Munge"
