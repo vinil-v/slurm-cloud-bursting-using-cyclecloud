@@ -23,7 +23,7 @@ Ensure you have the following prerequisites in place:
 - Clone this repository and import a cluster using the provided CycleCloud template (`slurm-headless.txt`).
 
 ```bash
-git clone https://github.com/vinil-v/slurm-cloud-bursting-using-cyclecloud.git
+git clone -b 1.0.0 https://github.com/vinil-v/slurm-cloud-bursting-using-cyclecloud.git
 cyclecloud import_cluster hpc1 -c Slurm-HL -f slurm-cloud-bursting-using-cyclecloud/templates/slurm-headless.txt
 ```
 
@@ -47,7 +47,7 @@ Total nodes: 0
 - This script will install and configure Slurm Scheduler.
 
 ```bash
-git clone https://github.com/vinil-v/slurm-cloud-bursting-using-cyclecloud.git
+git clone -b 1.0.0  https://github.com/vinil-v/slurm-cloud-bursting-using-cyclecloud.git
 cd slurm-cloud-bursting-using-cyclecloud/scripts
 sh slurm-scheduler-builder.sh
 ```
