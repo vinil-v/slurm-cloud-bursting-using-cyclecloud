@@ -4,13 +4,14 @@
 ################################
 
 
-[cluster Slurm-burst-headless]
+[cluster Slurm-headless]
 FormLayout = selectionpanel
 Category = Schedulers
 
 Autoscale = $Autoscale
 
     [[node defaults]]
+    UsePublicNetwork = $UsePublicNetwork
     Credentials = $Credentials    
     SubnetId = $SubnetId
     Region = $Region
@@ -91,6 +92,8 @@ Autoscale = $Autoscale
 
         [[[cluster-init cyclecloud/slurm:execute:3.0.9]]]
 
+        [[[network-interface eth0]]]
+        AssociatePublicIpAddress = $ExecuteNodesPublic
 
     [[nodearray hpc]]
     Extends = nodearraybase
@@ -121,6 +124,21 @@ Autoscale = $Autoscale
         [[[configuration]]]
         slurm.hpc = false
         slurm.partition = htc
+        # set pcpu = false for all hyperthreaded VMs
+        slurm.use_pcpu = false
+
+    [[nodearray dynamic]]
+    Extends = nodearraybase
+    MachineType = $DynamicMachineType
+    ImageName = $DynamicImageName
+    MaxCoreCount = $MaxDynamicExecuteCoreCount
+
+    Interruptible = $DynamicUseLowPrio
+    MaxPrice = $DynamicSpotMaxPrice
+    AdditionalClusterInitSpecs = $DynamicClusterInitSpecs
+        [[[configuration]]]
+        slurm.hpc = false
+        slurm.dynamic_config := "-Z --conf \"Feature=dyn\""
         # set pcpu = false for all hyperthreaded VMs
         slurm.use_pcpu = false
 
@@ -159,6 +177,12 @@ Order = 10
         ParameterType = Cloud.MachineType
         DefaultValue = Standard_F2s_v2
 
+        [[[parameter DynamicMachineType]]]
+        Label = Dyn VM Type
+        Description = The VM type for Dynamic execute nodes
+        ParameterType = Cloud.MachineType
+        DefaultValue = Standard_F2s_v2
+        Config.MultiSelect = true
 
 
     [[parameters Auto-Scaling]]
@@ -187,6 +211,14 @@ Order = 10
         Config.MinValue = 1
         Config.IntegerOnly = true
 
+        [[[parameter MaxDynamicExecuteCoreCount]]]
+        Label = Max Dyn Cores
+        Description = The total number of Dynamic execute cores to start
+        DefaultValue = 100
+        Config.Plugin = pico.form.NumberTextBox
+        Config.MinValue = 1
+        Config.IntegerOnly = true
+
         [[[parameter HPCMaxScalesetSize]]]
         Label = Max VMs per VMSS
         Description = The maximum number of VMs created per VM Scaleset e.g. switch in Slurm.
@@ -210,6 +242,21 @@ Order = 10
         Conditions.Excluded := HTCUseLowPrio isnt true
         Config.MinValue = -1
 
+        [[[parameter DynamicUseLowPrio]]]
+        Label = DynSpot
+        DefaultValue = false
+        Widget.Plugin = pico.form.BooleanCheckBox
+        Widget.Label = Use Spot VMs for Dynamic execute hosts
+
+        [[[parameter DynamicSpotMaxPrice]]]
+        Label = Max Price Dyn
+        DefaultValue = -1
+        Description = Max price for Spot VMs in USD (value of -1 will not evict based on price)
+        Config.Plugin = pico.form.NumberTextBox
+        Conditions.Excluded := DynamicUseLowPrio isnt true
+        Config.MinValue = -1
+
+        
     [[parameters Networking]]
     Order = 40
 
@@ -219,6 +266,7 @@ Order = 10
         ParameterType = Azure.Subnet
         Required = True
 
+   
 [parameters Network Attached Storage]
 Order = 15
 
@@ -309,6 +357,7 @@ Order = 15
         Conditions.Excluded := !UseBuiltinSched || configuration_slurm_ha_enabled
 
 
+
     [[parameters Default NFS Share]]
     Order = 30
     Label = File-system Mount for /shared
@@ -365,6 +414,7 @@ Order = 15
         Label = Mount Options
         Description = NFS Client Mount Options        
         Conditions.Hidden := UseBuiltinShared && !configuration_slurm_ha_enabled
+
 
         [[[parameter FilesystemSize]]]
         Label = Size (GB)
@@ -486,7 +536,7 @@ Order = 20
         Label = Enable Termination notifications
         DefaultValue = False        
 
-
+   
     [[parameters Software]]
     Description = "Specify the scheduling software, and base OS installed on all nodes, and optionally the cluster-init and chef versions from your locker."
     Order = 10
@@ -520,7 +570,14 @@ Order = 20
         Config.OS = linux
         DefaultValue = almalinux8
         Config.Filter := Package in {"cycle.image.ubuntu20", "cycle.image.ubuntu22", "cycle.image.sles15-hpc", "almalinux8"}
- 
+
+        [[[parameter DynamicImageName]]]
+        Label = Dynamic OS
+        ParameterType = Cloud.Image
+        Config.OS = linux
+        DefaultValue = almalinux8
+        Config.Filter := Package in {"cycle.image.ubuntu20", "cycle.image.ubuntu22", "cycle.image.sles15-hpc", "almalinux8"}
+   
         [[[parameter HTCClusterInitSpecs]]]
         Label = HTC Cluster-Init
         DefaultValue = =undefined
@@ -531,6 +588,12 @@ Order = 20
         Label = HPC Cluster-Init
         DefaultValue = =undefined
         Description = Cluster init specs to apply to HPC execute nodes
+        ParameterType = Cloud.ClusterInitSpecs
+
+        [[[parameter DynamicClusterInitSpecs]]]
+        Label = Dyn Cluster-Init
+        DefaultValue = =undefined
+        Description = Cluster init specs to apply to Dynamic execute nodes
         ParameterType = Cloud.ClusterInitSpecs
 
         [[[parameter configuration_slurm_disable_pmc]]]
@@ -548,6 +611,20 @@ Order = 20
         ParameterType = Boolean
         Config.Label = Use SSH tunnel to connect to CycleCloud (required if direct access is blocked)
 
+        [[[parameter UsePublicNetwork]]]
+        Label = Public Head Node
+        DefaultValue = true
+        ParameterType = Boolean
+        Config.Label = Access scheduler node from the Internet
+
+        [[[parameter ExecuteNodesPublic]]]
+        Label = Public Execute
+        DefaultValue = false
+        ParameterType = Boolean
+        Config.Label = Access execute nodes from the Internet
+        Conditions.Excluded := UsePublicNetwork isnt true
+
+        
     [[parameters Node Health Checks]]
     Description = "Section for configuring Node Health Checks"
     Order = 12
