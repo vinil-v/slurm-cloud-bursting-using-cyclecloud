@@ -11,6 +11,12 @@ if [ $(whoami) != root ]; then
   exit 1
 fi
 
+# Define variables
+slurm_script_dir="/opt/azurehpc/slurm"
+config_dir="/sched/$cluster_name"
+slurm_autoscale_pkg_version="3.0.9"
+slurm_autoscale_pkg="azure-slurm-pkg-$slurm_autoscale_pkg_version.tar.gz"
+
 # Prompt user to enter CycleCloud details for Slurm scheduler integration
 echo "Please enter the CycleCloud details to integrate with the Slurm scheduler"
 echo " "
@@ -37,10 +43,6 @@ echo "CycleCloud URL: $url"
 echo " "
 echo "------------------------------------------------------------------------------------------------------------------------------"
 
-# Directory paths
-slurm_script_dir="/opt/azurehpc/slurm"
-config_dir="/sched/$cluster_name"
-
 # Create necessary directories
 mkdir -p "$slurm_script_dir"
 
@@ -56,8 +58,8 @@ echo "--------------------------------------------------------------------------
 echo "Downloading and installing CycleCloud Slurm integration package"
 echo "------------------------------------------------------------------------------------------------------------------------------"
 
-wget https://github.com/Azure/cyclecloud-slurm/releases/download/3.0.9/azure-slurm-pkg-3.0.9.tar.gz -P "$slurm_script_dir"
-tar -xvf "$slurm_script_dir/azure-slurm-pkg-3.0.9.tar.gz" -C "$slurm_script_dir"
+wget https://github.com/Azure/cyclecloud-slurm/releases/download/$slurm_autoscale_pkg_version/$slurm_autoscale_pkg -P "$slurm_script_dir"
+tar -xvf "$slurm_script_dir/$slurm_autoscale_pkg" -C "$slurm_script_dir"
 cd "$slurm_script_dir/azure-slurm"
 head -n -30 install.sh > integrate-cc.sh
 chmod +x integrate-cc.sh
