@@ -4,7 +4,7 @@
 # This script is used to install the CycleCloud Slurm integration package and configure the autoscaler
 # This script is intended to be run on the external Slurm scheduler
 # Author : Vinil Vadakkepurakkal
-# Date : 13/5/2024
+# Date : 25/09/2024
 set -e
 if [ $(whoami) != root ]; then
   echo "Please run as root"
@@ -56,8 +56,8 @@ echo "--------------------------------------------------------------------------
 echo "Downloading and installing CycleCloud Slurm integration package"
 echo "------------------------------------------------------------------------------------------------------------------------------"
 
-wget https://github.com/Azure/cyclecloud-slurm/releases/download/3.0.6/azure-slurm-pkg-3.0.6.tar.gz -P "$slurm_script_dir"
-tar -xvf "$slurm_script_dir/azure-slurm-pkg-3.0.6.tar.gz" -C "$slurm_script_dir"
+wget https://github.com/Azure/cyclecloud-slurm/releases/download/3.0.9/azure-slurm-pkg-3.0.9.tar.gz -P "$slurm_script_dir"
+tar -xvf "$slurm_script_dir/azure-slurm-pkg-3.0.9.tar.gz" -C "$slurm_script_dir"
 cd "$slurm_script_dir/azure-slurm"
 head -n -30 install.sh > integrate-cc.sh
 chmod +x integrate-cc.sh
