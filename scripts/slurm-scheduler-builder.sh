@@ -97,6 +97,10 @@ gpgkey=https://packages.microsoft.com/keys/microsoft.asc
 priority=10
 EOF
 echo "Slurm repo setup complete"
+echo " "
+echo "------------------------------------------------------------------------------------------------------------------------------"
+echo "Installing Slurm"
+echo "------------------------------------------------------------------------------------------------------------------------------"
 
 slurm_packages="slurm slurm-slurmrestd slurm-libpmi slurm-devel slurm-pam_slurm slurm-perlapi slurm-torque slurm-openlava slurm-example-configs"
 sched_packages="slurm-slurmctld slurm-slurmdbd"
@@ -219,3 +223,4 @@ echo " Go to CycleCloud Portal and edit the $cluster_name cluster configuration 
 echo " Use $ip_address IP Address for File-system Mount for /sched and /shared in Network Attached Storage section in CycleCloud GUI "
 echo " Once the cluster is started, proceed to run  cyclecloud-integrator.sh script to complete the integration with CycleCloud."
 echo "------------------------------------------------------------------------------------------------------------------------------"
+echo " "
