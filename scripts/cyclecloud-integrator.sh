@@ -11,12 +11,6 @@ if [ $(whoami) != root ]; then
   exit 1
 fi
 
-# Define variables
-
-slurm_autoscale_pkg_version="3.0.9"
-slurm_autoscale_pkg="azure-slurm-pkg-$slurm_autoscale_pkg_version.tar.gz"
-slurm_script_dir="/opt/azurehpc/slurm"
-config_dir="/sched/$cluster_name"
 
 # Prompt user to enter CycleCloud details for Slurm scheduler integration
 echo "Please enter the CycleCloud details to integrate with the Slurm scheduler"
@@ -43,6 +37,13 @@ echo "CycleCloud Username: $username"
 echo "CycleCloud URL: $url"
 echo " "
 echo "------------------------------------------------------------------------------------------------------------------------------"
+
+# Define variables
+
+slurm_autoscale_pkg_version="3.0.9"
+slurm_autoscale_pkg="azure-slurm-pkg-$slurm_autoscale_pkg_version.tar.gz"
+slurm_script_dir="/opt/azurehpc/slurm"
+config_dir="/sched/$cluster_name"
 
 # Create necessary directories
 mkdir -p "$slurm_script_dir"
