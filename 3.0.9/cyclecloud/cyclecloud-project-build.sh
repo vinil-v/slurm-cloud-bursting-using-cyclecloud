@@ -13,10 +13,10 @@ cyclecloud import_cluster $cluster_name -c Slurm-burst-headless -f slurm-309-hea
 
 # creating custom project and upload it to the locker
 
-CCLOCKERNAME=$(cyclecloud locker list | sed 's/(.*)//')
+CCLOCKERNAME=$(cyclecloud locker list | sed 's/(.*)//; s/[[:space:]]*$//')
 echo "Locker Name: $CCLOCKERNAME"
 echo "Fetching CycleCloud project"
 SLURM_PROJ_VERSION="3.0.9"
-cyclecloud project fetch https://github.com/Azure/cyclecloud-slurm/releases/$SLURM_PROJ_VERSION slurm$SLURM_PROJ_VERSION
-cd slurm$SLURM_PROJ_VERSION
-cyclecloud project upload \"$(echo $CCLOCKERNAME | xargs)\"
+cyclecloud project fetch https://github.com/Azure/cyclecloud-slurm/releases/$SLURM_PROJ_VERSION slurm-$SLURM_PROJ_VERSION
+cd slurm-$SLURM_PROJ_VERSION
+cyclecloud project upload \"$CCLOCKERNAME\"
