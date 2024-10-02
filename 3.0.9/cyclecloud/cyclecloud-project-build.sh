@@ -9,7 +9,7 @@ echo "Cluster Name: $cluster_name"
 echo "Use the same cluster name: $cluster_name in building the scheduler"
 
 echo "Importing Cluster"
-cyclecloud import_cluster $cluster_name -c Slurm-burst-headless -f cyclecloud/slurm-309-headless.txt
+cyclecloud import_cluster $cluster_name -c Slurm-burst-headless -f slurm-309-headless.txt
 
 # creating custom project and upload it to the locker
 
