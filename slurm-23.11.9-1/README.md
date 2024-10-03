@@ -11,20 +11,21 @@ Slurm bursting enables the extension of your on-premises Slurm cluster into Azur
 Ensure you have the following prerequisites in place:
 
 - **OS Version**: AlmaLinux release 8.7 (`almalinux:almalinux-hpc:8_7-hpc-gen2:latest`)
-- **CycleCloud Version**: 8.6.0-3223
-- **Slurm Version**: 23.02.7-1
-- **cyclecloud-slurm Project**: 3.0.6
+- **Slurm Version**: 23.11.9-1
+- **cyclecloud-slurm Project**: 3.0.9
+- **CycleCloud Version**: 8.6.4-3320
 
 ## Setup Instructions
 
 ### 1. On CycleCloud VM:
 
-- Ensure CycleCloud 8.6 VM is running and accessible via `cyclecloud` CLI.
+- Ensure CycleCloud 8.6.4 VM is running and accessible via `cyclecloud` CLI.
 - Clone this repository and import a cluster using the provided CycleCloud template (`slurm-headless.txt`).
 
 ```bash
-git clone -b 1.0.0 https://github.com/vinil-v/slurm-cloud-bursting-using-cyclecloud.git
-cyclecloud import_cluster hpc1 -c Slurm-HL -f slurm-cloud-bursting-using-cyclecloud/templates/slurm-headless.txt
+git clone https://github.com/vinil-v/slurm-cloud-bursting-using-cyclecloud.git
+cd slurm-cloud-bursting-using-cyclecloud/slurm-23.11.9-1/cyclecloud
+sh cyclecloud-project-build.sh
 ```
 
 Output :
