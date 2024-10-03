@@ -26,8 +26,8 @@ read -s -p "Enter CycleCloud Password: " password
 echo ""  # Move to a new line after password input
 
 # Prompt for URL
-read -p "Enter CycleCloud URL (e.g., https://10.222.1.19): " url
-cleaned_url=$(echo -n "$url" | tr -d '[:cntrl:]')
+read -p "Enter CycleCloud IP address: " ccip_address
+url="https://$ccip_address"
 
 ip_address=$(hostname -I | awk '{print $1}')
 echo "------------------------------------------------------------------------------------------------------------------------------"
@@ -37,7 +37,7 @@ echo "Cluster Name: $cluster_name"
 echo "Scheduler Hostname: $(hostname)"
 echo "NFSServer IP Address: $ip_address"
 echo "CycleCloud Username: $username"
-echo "CycleCloud URL: $cleaned_url"
+echo "CycleCloud URL: $url"
 echo " "
 echo "------------------------------------------------------------------------------------------------------------------------------"
 
@@ -271,7 +271,7 @@ echo "--------------------------------------------------------------------------
 echo "Initializing autoscaler configuration"
 echo "------------------------------------------------------------------------------------------------------------------------------"
 
-azslurm initconfig --username "$username" --password "$password" --url "$cleaned_url" --cluster-name "$cluster_name" --config-dir "$sched_dir" --default-resource '{"select": {}, "name": "slurm_gpus", "value": "node.gpu_count"}' > "$slurm_script_dir/autoscale.json"
+azslurm initconfig --username "$username" --password "$password" --url "$url" --cluster-name "$cluster_name" --config-dir "$sched_dir" --default-resource '{"select": {}, "name": "slurm_gpus", "value": "node.gpu_count"}' > "$slurm_script_dir/autoscale.json"
 chown slurm:slurm "$slurm_script_dir/autoscale.json"
 chown -R slurm:slurm "$slurm_script_dir"
 # Connect and scale
