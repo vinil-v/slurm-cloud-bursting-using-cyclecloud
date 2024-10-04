@@ -19,4 +19,5 @@ echo "Fetching CycleCloud project"
 SLURM_PROJ_VERSION="3.0.9"
 cyclecloud project fetch https://github.com/Azure/cyclecloud-slurm/releases/$SLURM_PROJ_VERSION slurm-$SLURM_PROJ_VERSION
 cd slurm-$SLURM_PROJ_VERSION
+echo "Uploading CycleCloud project to the locker"
 cyclecloud project upload "$CCLOCKERNAME"

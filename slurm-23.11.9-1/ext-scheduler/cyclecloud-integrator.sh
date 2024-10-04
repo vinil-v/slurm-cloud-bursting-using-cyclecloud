@@ -26,7 +26,8 @@ read -s -p "Enter CycleCloud Password: " password
 echo ""  # Move to a new line after password input
 
 # Prompt for URL
-read -p "Enter CycleCloud URL (e.g., https://10.222.1.19): " url
+read -p "Enter CycleCloud IP (e.g.,10.222.1.19): " ip
+url="https://$ip"
 
 # Display summary of entered details
 echo "------------------------------------------------------------------------------------------------------------------------------"

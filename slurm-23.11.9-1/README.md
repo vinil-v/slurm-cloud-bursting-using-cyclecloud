@@ -20,7 +20,7 @@ Ensure you have the following prerequisites in place:
 ### 1. On CycleCloud VM:
 
 - Ensure CycleCloud 8.6.4 VM is running and accessible via `cyclecloud` CLI.
-- Clone this repository and import a cluster using the provided CycleCloud template (`slurm-headless.txt`).
+- Execute the `cyclecloud-project-build.sh` script and provide the cluster name (`hpc6`) this will setup and custom project based on `cyclecloud-slurum-3.0.9` and import the cluster the headless template.
 
 ```bash
 git clone https://github.com/vinil-v/slurm-cloud-bursting-using-cyclecloud.git
@@ -31,25 +31,41 @@ sh cyclecloud-project-build.sh
 Output :
 
 ```bash
-[vinil@cc86 ~]$ cyclecloud import_cluster hpc1 -c Slurm-HL -f slurm-cloud-bursting-using-cyclecloud/cyclecloud-template/slurm-headless.txt
-Importing cluster Slurm-HL and creating cluster hpc1....
+[vinil@cc86vm ~]$ git clone https://github.com/vinil-v/slurm-cloud-bursting-using-cyclecloud.git
+Cloning into 'slurm-cloud-bursting-using-cyclecloud'...
+remote: Enumerating objects: 239, done.
+remote: Counting objects: 100% (239/239), done.
+remote: Compressing objects: 100% (168/168), done.
+remote: Total 239 (delta 137), reused 167 (delta 67), pack-reused 0 (from 0)
+Receiving objects: 100% (239/239), 205.17 KiB | 2.14 MiB/s, done.
+Resolving deltas: 100% (137/137), done.
+[vinil@cc86vm ~]$ cd slurm-cloud-bursting-using-cyclecloud/slurm-23.11.9-1/cyclecloud/
+[vinil@cc86vm cyclecloud]$ sh cyclecloud-project-build.sh
+Enter Cluster Name: hpc6
+Cluster Name: hpc6
+Use the same cluster name: hpc6 in building the scheduler
+Importing Cluster
+Importing cluster Slurm_HL and creating cluster hpc6....
 ----------
-hpc1 : off
+hpc6 : off
 ----------
 Resource group:
 Cluster nodes:
 Total nodes: 0
+Locker Name: HPC+AI storage
+Fetching CycleCloud project
+Uploading CycleCloud project to the locker
 ```
 
 ### 2. Preparing Scheduler VM:
 
 - Deploy a VM using the specified AlmaLinux image (If you have an existing Slurm Scheduler, you can skip this).
-- Run the Slurm scheduler installation script (`slurm-scheduler-builder.sh`) and provide the cluster name (`hpc1`) when prompted.
+- Run the Slurm scheduler installation script (`slurm-scheduler-builder.sh`) and provide the cluster name (`hpc6`) when prompted.
 - This script will install and configure Slurm Scheduler.
 
 ```bash
-git clone -b 1.0.0  https://github.com/vinil-v/slurm-cloud-bursting-using-cyclecloud.git
-cd slurm-cloud-bursting-using-cyclecloud/scripts
+git clone https://github.com/vinil-v/slurm-cloud-bursting-using-cyclecloud.git
+cd slurm-cloud-bursting-using-cyclecloud/slurm-23.11.9-1/ext-scheduler
 sh slurm-scheduler-builder.sh
 ```
 Output 
@@ -59,20 +75,20 @@ Output
 Building Slurm scheduler for cloud bursting with Azure CycleCloud
 ------------------------------------------------------------------------------------------------------------------------------
 
-Enter Cluster Name: hpc1
+Enter Cluster Name: hpc6
 ------------------------------------------------------------------------------------------------------------------------------
 
 Summary of entered details:
-Cluster Name: hpc1
+Cluster Name: hpc6
 Scheduler Hostname: masternode2
 NFSServer IP Address: 10.222.1.26
 ```
 
 ### 3. CycleCloud UI:
 
-- Access the CycleCloud UI, edit the `hpc1` cluster settings, and configure VM SKUs and networking settings.
+- Access the CycleCloud UI, edit the `hpc6` cluster settings, and configure VM SKUs and networking settings.
 - Enter the NFS server IP address for `/sched` and `/shared` mounts in the Network Attached Storage section.
-- Save & Start `hpc1` cluster
+- Save & Start `hpc6` cluster
 
 ![NFS settings](images/NFSSettings.png)
 
@@ -82,7 +98,7 @@ NFSServer IP Address: 10.222.1.26
 - Provide CycleCloud details (username, password, and URL) when prompted.
 
 ```bash
-cd slurm-cloud-bursting-using-cyclecloud/scripts
+cd slurm-cloud-bursting-using-cyclecloud/slurm-23.11.9-1/ext-scheduler
 sh cyclecloud-integrator.sh
 ```
 Output:
@@ -91,10 +107,10 @@ Output:
 [root@masternode2 scripts]# sh cyclecloud-integrator.sh
 Please enter the CycleCloud details to integrate with the Slurm scheduler
 
-Enter Cluster Name: hpc1
+Enter Cluster Name: hpc6
 Enter CycleCloud Username: vinil
 Enter CycleCloud Password:
-Enter CycleCloud URL (e.g., https://10.222.1.19): https://10.222.1.19
+Enter CycleCloud IP (e.g., 10.222.1.19): 10.222.1.19
 ------------------------------------------------------------------------------------------------------------------------------
 
 Summary of entered details:
@@ -112,8 +128,8 @@ CycleCloud URL: https://10.222.1.19
 - In this example we are using the `users.sh` script to create a test user `vinil` and group for job submission. (User `vinil` is exist in CycleCloud)
 
 ```bash
-cd slurm-cloud-bursting-using-cyclecloud/scripts
-sh users.sh
+cd cd slurm-cloud-bursting-using-cyclecloud/slurm-23.11.9-1/ext-scheduler
+sh useradd_example.sh
 ```
 
 ### 6. Testing & Job Submission:
