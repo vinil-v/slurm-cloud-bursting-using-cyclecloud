@@ -90,7 +90,7 @@ NFSServer IP Address: 10.222.1.26
 - Enter the NFS server IP address for `/sched` and `/shared` mounts in the Network Attached Storage section.
 - Save & Start `hpc6` cluster
 
-![NFS settings](images/NFSSettings.png)
+![NFS settings](../images/NFSSettings.png)
 
 ### 4. On Slurm Scheduler Node:
 
@@ -152,7 +152,7 @@ Last login: Tue May 14 04:54:51 UTC 2024 on pts/0
                  1       hpc hostname    vinil CF       0:04      1 hpc1-hpc-1
 [vinil@masternode2 ~]$ hpc1-hpc-1
 ```
-![Node Creation](images/nodecreation.png)
+![Node Creation](../images/nodecreation.png)
 
 You should see the job running successfully, indicating a successful integration with CycleCloud.
 
