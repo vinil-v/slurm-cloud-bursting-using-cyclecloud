@@ -23,7 +23,7 @@ Ensure you have the following prerequisites in place:
 - Execute the `cyclecloud-project-build.sh` script and provide the cluster name (`hpc1`) this will setup and custom project based on `cyclecloud-slurum-3.0.9` and import the cluster the headless template.
 
 ```bash
-git clone https://github.com/vinil-v/slurm-cloud-bursting-using-cyclecloud.git
+git clone https://github.com/user1-v/slurm-cloud-bursting-using-cyclecloud.git
 cd slurm-cloud-bursting-using-cyclecloud/slurm-23.11.9-1/cyclecloud
 sh cyclecloud-project-build.sh
 ```
@@ -31,7 +31,7 @@ sh cyclecloud-project-build.sh
 Output :
 
 ```bash
-[vinil@cc86vm ~]$ git clone https://github.com/vinil-v/slurm-cloud-bursting-using-cyclecloud.git
+[user1@cc86vm ~]$ git clone https://github.com/user1-v/slurm-cloud-bursting-using-cyclecloud.git
 Cloning into 'slurm-cloud-bursting-using-cyclecloud'...
 remote: Enumerating objects: 239, done.
 remote: Counting objects: 100% (239/239), done.
@@ -39,8 +39,8 @@ remote: Compressing objects: 100% (168/168), done.
 remote: Total 239 (delta 137), reused 167 (delta 67), pack-reused 0 (from 0)
 Receiving objects: 100% (239/239), 205.17 KiB | 2.14 MiB/s, done.
 Resolving deltas: 100% (137/137), done.
-[vinil@cc86vm ~]$ cd slurm-cloud-bursting-using-cyclecloud/slurm-23.11.9-1/cyclecloud/
-[vinil@cc86vm cyclecloud]$ sh cyclecloud-project-build.sh
+[user1@cc86vm ~]$ cd slurm-cloud-bursting-using-cyclecloud/slurm-23.11.9-1/cyclecloud/
+[user1@cc86vm cyclecloud]$ sh cyclecloud-project-build.sh
 Enter Cluster Name: hpc1
 Cluster Name: hpc1
 Use the same cluster name: hpc1 in building the scheduler
@@ -64,7 +64,7 @@ Uploading CycleCloud project to the locker
 - This script will install and configure Slurm Scheduler.
 
 ```bash
-git clone https://github.com/vinil-v/slurm-cloud-bursting-using-cyclecloud.git
+git clone https://github.com/user1-v/slurm-cloud-bursting-using-cyclecloud.git
 cd slurm-cloud-bursting-using-cyclecloud/slurm-23.11.9-1/ext-scheduler
 sh slurm-scheduler-builder.sh
 ```
@@ -108,14 +108,14 @@ Output:
 Please enter the CycleCloud details to integrate with the Slurm scheduler
 
 Enter Cluster Name: hpc1
-Enter CycleCloud Username: vinil
+Enter CycleCloud Username: user1
 Enter CycleCloud Password:
 Enter CycleCloud IP (e.g., 10.222.1.19): 10.222.1.19
 ------------------------------------------------------------------------------------------------------------------------------
 
 Summary of entered details:
 Cluster Name: hpc1
-CycleCloud Username: vinil
+CycleCloud Username: user1
 CycleCloud URL: https://10.222.1.19
 
 ------------------------------------------------------------------------------------------------------------------------------
@@ -125,7 +125,7 @@ CycleCloud URL: https://10.222.1.19
 
 - Ensure consistent user and group IDs across all nodes.
 - Better to use a centralized User Management system like LDAP to ensure the UID and GID are consistent across all the nodes.
-- In this example we are using the `users.sh` script to create a test user `vinil` and group for job submission. (User `vinil` is exist in CycleCloud)
+- In this example we are using the `useradd_example.sh` script to create a test user `user1` and group for job submission. (User `user1` is exist in CycleCloud)
 
 ```bash
 cd cd slurm-cloud-bursting-using-cyclecloud/slurm-23.11.9-1/ext-scheduler
@@ -134,23 +134,23 @@ sh useradd_example.sh
 
 ### 6. Testing & Job Submission:
 
-- Log in as a test user (`vinil` in this example) on the Scheduler node.
+- Log in as a test user (`user1` in this example) on the Scheduler node.
 - Submit a test job to verify the setup.
 
 ```bash
-su - vinil
+su - user1
 srun hostname &
 ```
 Output:
 ```bash
-[root@masternode2 scripts]# su - vinil
+[root@masternode2 scripts]# su - user1
 Last login: Tue May 14 04:54:51 UTC 2024 on pts/0
-[vinil@masternode2 ~]$ srun hostname &
+[user1@masternode2 ~]$ srun hostname &
 [1] 43448
-[vinil@masternode2 ~]$ squeue
+[user1@masternode2 ~]$ squeue
              JOBID PARTITION     NAME     USER ST       TIME  NODES NODELIST(REASON)
-                 1       hpc hostname    vinil CF       0:04      1 hpc1-hpc-1
-[vinil@masternode2 ~]$ hpc1-hpc-1
+                 1       hpc hostname    user1 CF       0:04      1 hpc1-hpc-1
+[user1@masternode2 ~]$ hpc1-hpc-1
 ```
 ![Node Creation](../images/nodecreation.png)
 
