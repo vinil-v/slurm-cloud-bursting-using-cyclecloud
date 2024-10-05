@@ -6,6 +6,15 @@ This repository provides detailed instructions and scripts for setting up Slurm 
 
 Slurm bursting enables the extension of your on-premises Slurm cluster into Azure for flexible and scalable compute capacity. CycleCloud simplifies the management and provisioning of cloud resources, bridging your local infrastructure with cloud environments.
 
+[Requirement](#requirements)
+[Setup Instructions](#setup-instructions)
+[Importing a Cluster Using the Slurm Headless Template in CycleCloud](#importing-a-cluster-using-the-slurm-headless-template-in-cyclecloud)
+[Slurm Scheduler Installation and Configuration](#slurm-scheduler-installation-and-configuration)
+[CycleCloud UI Configuration](#cyclecloud-ui-configuration)
+[CycleCloud Autoscaler Integration on Slurm Scheduler](#cyclecloud-autoscaler-integration-on-slurm-scheduler)
+[User and Group Setup (Optional)](#user-and-group-setup-optional)
+[Testing the setup](#testing-the-setup)
+
 ## Requirements
 
 Ensure you have the following prerequisites in place:
@@ -17,10 +26,13 @@ Ensure you have the following prerequisites in place:
 
 ## Setup Instructions
 
-### 1. On CycleCloud VM:
+### Importing a Cluster Using the Slurm Headless Template in CycleCloud
 
-- Ensure CycleCloud 8.6.4 VM is running and accessible via `cyclecloud` CLI.
-- Execute the `cyclecloud-project-build.sh` script and provide the cluster name (`hpc1`) this will setup and custom project based on `cyclecloud-slurum-3.0.9` and import the cluster the headless template.
+- This step must be executed on the **CycleCloud VM**.
+- Make sure that the **CycleCloud 8.6.4 VM** is running and accessible via the `cyclecloud` CLI.
+- Execute the `cyclecloud-project-build.sh` script and provide the desired cluster name (e.g., `hpc1`). This will set up a custom project based on the `cyclecloud-slurm-3.0.9` version and import the cluster using the Slurm headless template.
+- In the example provided, `hpc1` is used as the cluster name. You can choose any cluster name, but be consistent and use the same name throughout the entire setup.
+
 
 ```bash
 git clone https://github.com/user1-v/slurm-cloud-bursting-using-cyclecloud.git
@@ -57,15 +69,18 @@ Fetching CycleCloud project
 Uploading CycleCloud project to the locker
 ```
 
-### 2. Preparing Scheduler VM:
+### Slurm Scheduler Installation and Configuration
 
-- Deploy a VM using the specified AlmaLinux image (If you have an existing Slurm Scheduler, you can skip this).
+- A VM should be deployed using the specified **AlmaLinux** image. 
+- If you already have a Slurm Scheduler installed, you may skip this step. However, it is recommended to review the script to ensure compatibility with your existing setup.
 - Run the Slurm scheduler installation script (`slurm-scheduler-builder.sh`) and provide the cluster name (`hpc1`) when prompted.
 - This script will install and configure Slurm Scheduler.
 
+
+
 ```bash
 git clone https://github.com/user1-v/slurm-cloud-bursting-using-cyclecloud.git
-cd slurm-cloud-bursting-using-cyclecloud/slurm-23.11.9-1/ext-scheduler
+cd slurm-cloud-bursting-using-cyclecloud/slurm-23.11.9-1/scheduler
 sh slurm-scheduler-builder.sh
 ```
 Output 
@@ -84,21 +99,22 @@ Scheduler Hostname: masternode2
 NFSServer IP Address: 10.222.1.26
 ```
 
-### 3. CycleCloud UI:
+### CycleCloud UI Configuration
 
-- Access the CycleCloud UI, edit the `hpc1` cluster settings, and configure VM SKUs and networking settings.
-- Enter the NFS server IP address for `/sched` and `/shared` mounts in the Network Attached Storage section.
-- Save & Start `hpc1` cluster
+- Access the **CycleCloud UI** and navigate to the settings for the `hpc1` cluster.
+- Edit the cluster settings to configure the VM SKUs and networking options as needed.
+- In the **Network Attached Storage** section, enter the NFS server IP address for the `/sched` and `/shared` mounts.
+- Once all settings are configured, click **Save** and then **Start** the `hpc1` cluster.
 
 ![NFS settings](../images/NFSSettings.png)
 
-### 4. On Slurm Scheduler Node:
+### CycleCloud Autoscaler Integration on Slurm Scheduler
 
 - Integrate Slurm with CycleCloud using the `cyclecloud-integrator.sh` script.
-- Provide CycleCloud details (username, password, and URL) when prompted.
+- Provide CycleCloud details (username, password, and ip address) when prompted.
 
 ```bash
-cd slurm-cloud-bursting-using-cyclecloud/slurm-23.11.9-1/ext-scheduler
+cd slurm-cloud-bursting-using-cyclecloud/slurm-23.11.9-1/scheduler
 sh cyclecloud-integrator.sh
 ```
 Output:
@@ -121,21 +137,21 @@ CycleCloud URL: https://10.222.1.19
 ------------------------------------------------------------------------------------------------------------------------------
 ```
 
-### 5. User and Group Setup:
+### User and Group Setup (Optional)
 
 - Ensure consistent user and group IDs across all nodes.
-- Better to use a centralized User Management system like LDAP to ensure the UID and GID are consistent across all the nodes.
-- In this example we are using the `useradd_example.sh` script to create a test user `user1` and group for job submission. (User `user1` is exist in CycleCloud)
+- It is advisable to use a centralized User Management system like LDAP to maintain consistent UID and GID across all nodes.
+- In this example, we are using the `useradd_example.sh` script to create a test user `user1` and a group for job submission. (User `user1` already exists in CycleCloud)
 
 ```bash
-cd cd slurm-cloud-bursting-using-cyclecloud/slurm-23.11.9-1/ext-scheduler
+cd cd slurm-cloud-bursting-using-cyclecloud/slurm-23.11.9-1/scheduler
 sh useradd_example.sh
 ```
 
-### 6. Testing & Job Submission:
+### Testing the Setup
 
-- Log in as a test user (`user1` in this example) on the Scheduler node.
-- Submit a test job to verify the setup.
+- Log in as a test user (e.g., `user1`) on the Scheduler node.
+- Submit a test job to verify that the setup is functioning correctly.
 
 ```bash
 su - user1
