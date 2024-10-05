@@ -6,14 +6,16 @@ This repository provides detailed instructions and scripts for setting up Slurm 
 
 Slurm bursting enables the extension of your on-premises Slurm cluster into Azure for flexible and scalable compute capacity. CycleCloud simplifies the management and provisioning of cloud resources, bridging your local infrastructure with cloud environments.
 
-[Requirement](#requirements)
-[Setup Instructions](#setup-instructions)
-[Importing a Cluster Using the Slurm Headless Template in CycleCloud](#importing-a-cluster-using-the-slurm-headless-template-in-cyclecloud)
-[Slurm Scheduler Installation and Configuration](#slurm-scheduler-installation-and-configuration)
-[CycleCloud UI Configuration](#cyclecloud-ui-configuration)
-[CycleCloud Autoscaler Integration on Slurm Scheduler](#cyclecloud-autoscaler-integration-on-slurm-scheduler)
-[User and Group Setup (Optional)](#user-and-group-setup-optional)
-[Testing the setup](#testing-the-setup)
+## Table of Contents
+
+- [Requirements](#requirements)
+- [Setup Instructions](#setup-instructions)
+- [Importing a Cluster Using the Slurm Headless Template in CycleCloud](#importing-a-cluster-using-the-slurm-headless-template-in-cyclecloud)
+- [Slurm Scheduler Installation and Configuration](#slurm-scheduler-installation-and-configuration)
+- [CycleCloud UI Configuration](#cyclecloud-ui-configuration)
+- [CycleCloud Autoscaler Integration with Slurm Scheduler](#cyclecloud-autoscaler-integration-on-slurm-scheduler)
+- [User and Group Setup (Optional)](#user-and-group-setup-optional)
+- [Testing the Setup](#testing-the-setup)
 
 ## Requirements
 
@@ -21,7 +23,6 @@ Ensure you have the following prerequisites in place:
 
 - **OS Version**: AlmaLinux release 8.7 (`almalinux:almalinux-hpc:8_7-hpc-gen2:latest`)
 - **Slurm Version**: 23.11.9-1
-- **cyclecloud-slurm Project**: 3.0.9
 - **CycleCloud Version**: 8.6.4-3320
 
 ## Setup Instructions
