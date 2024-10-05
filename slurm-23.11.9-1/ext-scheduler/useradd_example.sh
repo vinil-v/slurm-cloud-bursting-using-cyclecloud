@@ -1,10 +1,21 @@
 #!/bin/bash
-# Create a shared home directory for Test user
-# Make sure to replace the username, gid, and uid with the desired values
-# In Cyclecloud, user is created with the username 'vinil' and uid and gid are 20001
-# We need to make sure that we create the proper uid and gid for the user in scheduler.
-# Author : Vinil Vadakkepurakkal
-# Date : 13/5/2024
+# -----------------------------------------------------------------------------
+# Script: Create Shared Home Directory for a Test User in Slurm Scheduler
+#
+# This script creates a new user in a Slurm scheduler environment, setting up a 
+# shared home directory. The user is configured with a specific username, GID, 
+# and UID. It is primarily designed for environments like CycleCloud where 
+# consistent user IDs are important (starting with 20001 for the first user).
+#
+# CycleCloud Convention:
+# - For the first user, the UID and GID default to 20001 in CycleCloud. Modify 
+#   these values as needed for additional users.
+#
+# Prerequisites:
+# - Script must be run with root privileges.
+# - The desired UID, GID, and username should be set before execution.
+# -----------------------------------------------------------------------------
+
 set -e
 if [ $(whoami) != root ]; then
   echo "Please run as root"
@@ -12,7 +23,7 @@ if [ $(whoami) != root ]; then
 fi
 
 # test user details
-username="vinil"
+username="user1"
 gid=20001
 uid=20001
 

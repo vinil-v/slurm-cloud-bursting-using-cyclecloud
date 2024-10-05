@@ -1,13 +1,29 @@
 #!/bin/sh
-# This script builds a External Slurm scheduler for cloud bursting with Azure CycleCloud
-# Author : Vinil Vadakkepurakkal
-# Date : 13/5/2024
-# Modified by : Vinil Vadakkepurakkal on 23/9/2024
+# -----------------------------------------------------------------------------
+# Script: Install and Configure Slurm Scheduler
+#
+# This script automates the installation and configuration of the Slurm scheduler 
+# on your VM or machine. It sets up the Slurm software to manage and schedule 
+# workloads efficiently across the available resources in your environment.
+#
+# Key Features:
+# - Installs and configures Slurm software on your VM or machine.
+# - Sets up the Slurm configuration to manage compute resources.
+#
+# Prerequisites:
+# - Root or sudo privileges are required to run the script.
+#
+# Usage:
+# # sh slurm-scheduler-builder.sh
+# -----------------------------------------------------------------------------
+
+
 set -e
 if [ $(whoami) != root ]; then
   echo "Please run as root"
   exit 1
 fi
+
 echo "------------------------------------------------------------------------------------------------------------------------------"
 echo "Building Slurm scheduler for cloud bursting with Azure CycleCloud"
 echo "------------------------------------------------------------------------------------------------------------------------------"

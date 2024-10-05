@@ -1,10 +1,24 @@
-#!/bin/sh
-
-# Script to integrate external Slurm Scheduler with CycleCloud application
-# This script is used to install the CycleCloud Slurm integration package and configure the autoscaler
-# This script is intended to be run on the external Slurm scheduler
-# Author : Vinil Vadakkepurakkal
-# Date : 25/09/2024
+# -----------------------------------------------------------------------------
+# Script: Install CycleCloud Autoscaler and Integrate with Slurm Scheduler
+#
+# This script automates the installation of the CycleCloud Autoscaler package, 
+# a key component used to dynamically scale compute resources in a cluster managed 
+# by the CycleCloud environment. It integrates with the Slurm scheduler to ensure 
+# efficient scaling based on workload demands.
+#
+# Key Features:
+# - Installs the CycleCloud Autoscaler package.
+# - Configures integration with the Slurm workload manager for automated scaling.
+# - Ensures that the compute resources in the cluster can scale up or down based 
+#   on the job queue and resource usage, optimizing both performance and cost.
+#
+# Prerequisites:
+# - Root or sudo privileges are required to execute the installation steps.
+# - Slurm scheduler should already be set up in the environment.
+#
+# Usage:
+# sh cyclecloud-integrator.sh
+# -----------------------------------------------------------------------------
 set -e
 if [ $(whoami) != root ]; then
   echo "Please run as root"
