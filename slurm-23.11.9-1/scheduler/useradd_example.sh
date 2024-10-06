@@ -27,7 +27,7 @@ username="user1"
 gid=20001
 uid=20001
 
-mkdir -p /shared/home/
+mkdir -p /shared/home/$username
 chmod 755 /shared/home/
 
 # Create group if not exists
@@ -37,7 +37,7 @@ fi
 
 # Create user with specified uid, gid, home directory, and shell
 useradd -g $gid -u $uid -d /shared/home/$username -s /bin/bash $username
-
+chown -R $username:$username /shared/home/$username
 # Switch to user to perform directory and file operations
 su - $username -c "mkdir -p /shared/home/$username/.ssh"
 su - $username -c "ssh-keygen -t rsa -N '' -f /shared/home/$username/.ssh/id_rsa"

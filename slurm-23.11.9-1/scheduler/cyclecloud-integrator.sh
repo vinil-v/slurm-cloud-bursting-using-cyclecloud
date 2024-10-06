@@ -1,3 +1,4 @@
+#!/bin/bash
 # -----------------------------------------------------------------------------
 # Script: Install CycleCloud Autoscaler and Integrate with Slurm Scheduler
 #
@@ -36,9 +37,12 @@ read -p "Enter Cluster Name: " cluster_name
 read -p "Enter CycleCloud Username: " username
 
 # Prompt for Password (masked input)
-read -s -p "Enter CycleCloud Password: " password
-echo ""  # Move to a new line after password input
-
+echo -n "Enter CycleCloud password: "
+stty -echo   # Turn off echo
+read password
+stty echo    # Turn echo back on
+echo
+echo "Password entered."
 # Prompt for URL
 read -p "Enter CycleCloud IP (e.g.,10.222.1.19): " ip
 url="https://$ip"
@@ -68,7 +72,7 @@ echo "--------------------------------------------------------------------------
 echo "Configuring virtual enviornment and Activating Python virtual environment"
 echo "------------------------------------------------------------------------------------------------------------------------------"
 python3 -m venv "$slurm_script_dir/venv"
-source "$slurm_script_dir/venv/bin/activate"
+. "$slurm_script_dir/venv/bin/activate"
 
 # Download and install CycleCloud Slurm integration package
 echo "------------------------------------------------------------------------------------------------------------------------------"
