@@ -252,12 +252,17 @@ Pin-Priority: -1" > /etc/apt/preferences.d/slurm-repository-pin-990
     echo "------------------------------------------------------------------------------------------------------------------------------"
 
     # Update package lists and install Slurm
-    apt update
-    apt install -y libhwloc15 libmysqlclient-dev libssl-dev jq python3-venv
+    # remove the need restart prompt for outdated libraries
+    grep -qxF "\$nrconf{restart} = 'a';" /etc/needrestart/conf.d/no-prompt.conf || echo "\$nrconf{restart} = 'a';" | sudo tee -a /etc/needrestart/conf.d/no-prompt.conf > /dev/null
+    apt-get update
+    apt install -y libhwloc15 libmysqlclient-dev libssl-dev jq python3-venv chrony
+    systemctl enable chrony
+    systemctl start chrony
     slurm_packages="slurm-smd slurm-smd-client slurm-smd-dev slurm-smd-libnss-slurm slurm-smd-libpam-slurm-adopt slurm-smd-slurmrestd slurm-smd-sview slurm-smd-slurmctld slurm-smd-slurmdbd"
     for pkg in $slurm_packages; do
-        apt install -y $pkg=$SLURM_VERSION
-        apt-mark hold $pkg   
+        apt-get update
+        DEBIAN_FRONTEND=noninteractive apt install -y $pkg=$SLURM_VERSION
+        DEBIAN_FRONTEND=noninteractive apt-mark hold $pkg   
     done
        
   # Unsupported OS
