@@ -36,7 +36,7 @@ Ensure you have the following prerequisites in place:
 
 
 ```bash
-git clone https://github.com/user1-v/slurm-cloud-bursting-using-cyclecloud.git
+git clone https://github.com/vinil-v/slurm-cloud-bursting-using-cyclecloud.git
 cd slurm-cloud-bursting-using-cyclecloud/slurm-23.11.9-1/cyclecloud
 sh cyclecloud-project-build.sh
 ```
@@ -44,7 +44,7 @@ sh cyclecloud-project-build.sh
 Output :
 
 ```bash
-[user1@cc86vm ~]$ git clone https://github.com/user1-v/slurm-cloud-bursting-using-cyclecloud.git
+[user1@cc86vm ~]$ git clone https://github.com/vinil-v/slurm-cloud-bursting-using-cyclecloud.git
 Cloning into 'slurm-cloud-bursting-using-cyclecloud'...
 remote: Enumerating objects: 239, done.
 remote: Counting objects: 100% (239/239), done.
@@ -80,7 +80,7 @@ Uploading CycleCloud project to the locker
 
 
 ```bash
-git clone https://github.com/user1-v/slurm-cloud-bursting-using-cyclecloud.git
+git clone https://github.com/vinil-v/slurm-cloud-bursting-using-cyclecloud.git
 cd slurm-cloud-bursting-using-cyclecloud/slurm-23.11.9-1/scheduler
 sh slurm-scheduler-builder.sh
 ```
