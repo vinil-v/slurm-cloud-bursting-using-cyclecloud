@@ -104,6 +104,8 @@ echo "--------------------------------------------------------------------------
 azslurm connect
 azslurm scale --no-restart
 chown -R slurm:slurm "$slurm_script_dir"/logs/*.log
+
+systemctl restart munge
 systemctl restart slurmctld
 echo " "
 echo "------------------------------------------------------------------------------------------------------------------------------"
