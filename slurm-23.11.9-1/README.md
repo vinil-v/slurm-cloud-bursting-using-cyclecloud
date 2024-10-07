@@ -21,7 +21,7 @@ Slurm bursting enables the extension of your on-premises Slurm cluster into Azur
 
 Ensure you have the following prerequisites in place:
 
-- **OS Version**: AlmaLinux release 8.7 (`almalinux:almalinux-hpc:8_7-hpc-gen2:latest`)
+- **OS Version supported**: AlmaLinux release 8.7 (`almalinux:almalinux-hpc:8_7-hpc-gen2:latest`) & Ubuntu HPC 22.04 (`microsoft-dsvm:ubuntu-hpc:2204:latest`)
 - **Slurm Version**: 23.11.9-1
 - **CycleCloud Version**: 8.6.4-3320
 
@@ -72,7 +72,7 @@ Uploading CycleCloud project to the locker
 
 ### Slurm Scheduler Installation and Configuration
 
-- A VM should be deployed using the specified **AlmaLinux** image. 
+- A VM should be deployed using the specified **AlmaLinux 8.7** or **Ubuntu 22.04** image. 
 - If you already have a Slurm Scheduler installed, you may skip this step. However, it is recommended to review the script to ensure compatibility with your existing setup.
 - Run the Slurm scheduler installation script (`slurm-scheduler-builder.sh`) and provide the cluster name (`hpc1`) when prompted.
 - This script will install and configure Slurm Scheduler.
@@ -105,6 +105,7 @@ NFSServer IP Address: 10.222.1.26
 - Access the **CycleCloud UI** and navigate to the settings for the `hpc1` cluster.
 - Edit the cluster settings to configure the VM SKUs and networking options as needed.
 - In the **Network Attached Storage** section, enter the NFS server IP address for the `/sched` and `/shared` mounts.
+- Select the OS from Advance setting tab - **Ubuntu 22.04** or **AlmaLinux 8** from the drop down based on the scheduler VM.
 - Once all settings are configured, click **Save** and then **Start** the `hpc1` cluster.
 
 ![NFS settings](../images/NFSSettings.png)
