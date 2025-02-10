@@ -4,7 +4,7 @@
 # This script is used to install the CycleCloud Slurm integration package and configure the autoscaler
 # This script is intended to be run on the external Slurm scheduler
 # Author : Vinil Vadakkepurakkal
-# Date : 25/09/2024
+# Date : 10/02/2025
 set -e
 if [ $(whoami) != root ]; then
   echo "Please run as root"
@@ -25,6 +25,9 @@ read -p "Enter CycleCloud Username: " username
 read -s -p "Enter CycleCloud Password: " password
 echo ""  # Move to a new line after password input
 
+read -s -p "Enter the Project version: " slurm_autoscale_pkg_version
+
+
 # Prompt for URL
 read -p "Enter CycleCloud URL (e.g., https://10.222.1.19): " url
 
@@ -40,7 +43,6 @@ echo "--------------------------------------------------------------------------
 
 # Define variables
 
-slurm_autoscale_pkg_version="3.0.9"
 slurm_autoscale_pkg="azure-slurm-pkg-$slurm_autoscale_pkg_version.tar.gz"
 slurm_script_dir="/opt/azurehpc/slurm"
 config_dir="/sched/$cluster_name"
