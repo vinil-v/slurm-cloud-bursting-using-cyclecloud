@@ -25,7 +25,7 @@ read -p "Enter CycleCloud Username: " username
 read -s -p "Enter CycleCloud Password: " password
 echo ""  # Move to a new line after password input
 
-read -s -p "Enter the Project version: " slurm_autoscale_pkg_version
+read -p "Enter the Project version: " slurm_autoscale_pkg_version
 
 
 # Prompt for URL

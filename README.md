@@ -99,7 +99,8 @@ git clone https://github.com/vinil-v/slurm-cloud-bursting-using-cyclecloud.git
 cd  slurm-cloud-bursting-using-cyclecloud/scheduler/
 sh 01_slurm-scheduler-builder.sh
 ```
-Output 
+
+Output: 
 
 ```bash
 [root@scheduler scheduler]# sh 01_slurm-scheduler-builder.sh 
@@ -156,29 +157,36 @@ Slurm configured
 
 ### 4. On Slurm Scheduler Node:
 
-- Integrate Slurm with CycleCloud using the `cyclecloud-integrator.sh` script.
+- Integrate Slurm scheduler with CycleCloud using the `sh 02_cyclecloud-integrator.sh` script.
 - Provide CycleCloud details (username, password, and URL) when prompted.
 
 ```bash
-cd slurm-cloud-bursting-using-cyclecloud/scripts
-sh cyclecloud-integrator.sh
+cd  slurm-cloud-bursting-using-cyclecloud/scheduler/
+sh sh 02_cyclecloud-integrator.sh
 ```
 Output:
 
 ```bash
-[root@masternode2 scripts]# sh cyclecloud-integrator.sh
+[root@scheduler scheduler]# sh 02_cyclecloud-integrator.sh 
 Please enter the CycleCloud details to integrate with the Slurm scheduler
-
-Enter Cluster Name: hpc1
+ 
+Enter Cluster Name: hpc10
 Enter CycleCloud Username: vinil
-Enter CycleCloud Password:
-Enter CycleCloud URL (e.g., https://10.222.1.19): https://10.222.1.19
+Enter CycleCloud Password: 
+Enter the Project version: 3.0.10
+Enter CycleCloud URL (e.g., https://10.222.1.19): https://xx.xxx.x.x
 ------------------------------------------------------------------------------------------------------------------------------
-
+ 
 Summary of entered details:
-Cluster Name: hpc1
+Cluster Name: hpc10
 CycleCloud Username: vinil
-CycleCloud URL: https://10.222.1.19
+CycleCloud URL: https://xx.xxx.x.x
+ 
+------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------
+Configuring virtual enviornment and Activating Python virtual environment
+------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------
 
 ------------------------------------------------------------------------------------------------------------------------------
 ```
@@ -190,10 +198,33 @@ CycleCloud URL: https://10.222.1.19
 - In this example we are using the `users.sh` script to create a test user `vinil` and group for job submission. (User `vinil` is exist in CycleCloud)
 
 ```bash
-cd slurm-cloud-bursting-using-cyclecloud/scripts
-sh users.sh
+cd slurm-cloud-bursting-using-cyclecloud/scheduler
+sh useradd_example.sh
 ```
+Output:
 
+```bash
+[root@scheduler scheduler]# sh useradd_example.sh 
+Enter User Name: vinil
+Generating public/private rsa key pair.
+Your identification has been saved in /shared/home/vinil/.ssh/id_rsa.
+Your public key has been saved in /shared/home/vinil/.ssh/id_rsa.pub.
+The key fingerprint is:
+SHA256:dURAjAhAQqTHNp3VnhyaeRyVk36OirzfatWk/8+onLw vinil@scheduler
+The key's randomart image is:
++---[RSA 3072]----+
+|++o....o =+=o    |
+|.o . o. = =.     |
+|. = o  B =...    |
+| o .  + *...o    |
+|       .S  B     |
+|          + o    |
+|     . . o .     |
+|      o o. o.. o |
+|      .+o.. E+o.o|
++----[SHA256]-----+
+[root@scheduler scheduler]# 
+```
 ### 6. Testing & Job Submission:
 
 - Log in as a test user (`vinil` in this example) on the Scheduler node.
@@ -205,14 +236,14 @@ srun hostname &
 ```
 Output:
 ```bash
-[root@masternode2 scripts]# su - vinil
-Last login: Tue May 14 04:54:51 UTC 2024 on pts/0
-[vinil@masternode2 ~]$ srun hostname &
-[1] 43448
-[vinil@masternode2 ~]$ squeue
+[root@scheduler scheduler]# su - vinil
+Last login: Tue Feb 11 08:55:50 UTC 2025 on pts/0
+[vinil@scheduler ~]$ srun hostname &
+[1] 47480
+[vinil@scheduler ~]$ squeue 
              JOBID PARTITION     NAME     USER ST       TIME  NODES NODELIST(REASON)
-                 1       hpc hostname    vinil CF       0:04      1 hpc1-hpc-1
-[vinil@masternode2 ~]$ hpc1-hpc-1
+                 1       hpc hostname    vinil CF       0:03      1 hpc10-hpc-1
+[vinil@scheduler ~]$ 
 ```
 ![Node Creation](images/nodecreation.png)
 
