@@ -10,35 +10,82 @@ Slurm bursting enables the extension of your on-premises Slurm cluster into Azur
 
 Ensure you have the following prerequisites in place:
 
-- **OS Version**: AlmaLinux release 8.7 (`almalinux:almalinux-hpc:8_7-hpc-gen2:latest`)
-- **CycleCloud Version**: 8.6.0-3223
-- **Slurm Version**: 23.02.7-1
-- **cyclecloud-slurm Project**: 3.0.6
+- **OS Version**: AlmaLinux HPC & Ubuntu HPC
+- **CycleCloud Version**: 8.x
+- **cyclecloud-slurm Project**: 3.0.x
 
 ## Setup Instructions
 
 ### 1. On CycleCloud VM:
 
-- Ensure CycleCloud 8.6 VM is running and accessible via `cyclecloud` CLI.
-- Clone this repository and import a cluster using the provided CycleCloud template (`slurm-headless.txt`).
+
+- Ensure CycleCloud VM is running and accessible via `cyclecloud` CLI.
+- Clone this repository and run the `sh 01_prep_cyclecloud-slurm_template.sh` script in the cyclecloud directory.
+- `sh 01_prep_cyclecloud-slurm_template.sh` give the CycleCloud project version, Slurm version and cyclecloud-slurm template to build the Cloud busting setup.
 
 ```bash
-git clone -b 1.0.0 https://github.com/vinil-v/slurm-cloud-bursting-using-cyclecloud.git
-cyclecloud import_cluster hpc1 -c Slurm-HL -f slurm-cloud-bursting-using-cyclecloud/templates/slurm-headless.txt
+git clone https://github.com/vinil-v/slurm-cloud-bursting-using-cyclecloud.git
+cd slurm-cloud-bursting-using-cyclecloud/cyclecloud/
+sh 01_prep_cyclecloud-slurm_template.sh
 ```
 
 Output :
 
 ```bash
-[vinil@cc86 ~]$ cyclecloud import_cluster hpc1 -c Slurm-HL -f slurm-cloud-bursting-using-cyclecloud/cyclecloud-template/slurm-headless.txt
-Importing cluster Slurm-HL and creating cluster hpc1....
-----------
-hpc1 : off
-----------
-Resource group:
+[vinil@ccvm cyclecloud]$ sh 01_prep_cyclecloud-slurm_template.sh 
+Project version: 3.0.10
+Slurm version:  24.05.4-2
+Template location : slurm-3.0.10/templates/slurm-headless.txt
+Please refer README for customizing the template for Headless Slurm cluster
+[vinil@ccvm cyclecloud]$ 
+```
+This above output shows the Cyclecloud-Slurm Project version available in your cyclecloud enviorment, supported slurm version in the project and the template for creating headless slurm cluster.
+
+- Edit the template from the given template location (`Template location : slurm-3.0.10/templates/slurm-headless.txt`) using your favorite edior and make the following adjustment to create a headless template.
+    - Update the [cluster Slurm] to [cluster Slurm_HL] for refering as a Headless Cluster template.
+    - Remove the following sections completely in the template to prepare a headless template.
+
+        ```bash
+        slurm.ha_enabled = $configuration_slurm_ha_enabled
+        [[node scheduler]]
+        [[nodearray scheduler-ha]]
+        [[nodearray login]]
+        [[[parameter SchedulerMachineType]]]
+        [[[parameter loginMachineType]]]
+        [[[parameter NumberLoginNodes]]]
+        [[parameters High Availability]]
+        [[[parameter configuration_slurm_ha_enabled]]]
+        [[[parameter SchedulerHostName]]]
+        [[[parameter SchedulerImageName]]]
+        [[[parameter SchedulerClusterInitSpecs]]]
+        [[[parameter SchedulerZone]]]
+        [[[parameter SchedulerHAZone]]]
+        ```
+- Once the headless template is prepared then run `sh 02_cyclecloud_build_cluster.sh` script to import the headless cluster to cyclecloud.
+```bash
+sh 02_cyclecloud_build_cluster.sh
+```
+Output:
+```bash
+
+[vinil@ccvm cyclecloud]$ sh 02_cyclecloud_build_cluster.sh 
+Enter Cluster Name: hpc10
+Cluster Name: hpc10
+Importing Cluster
+Importing cluster Slurm_HL and creating cluster hpc10....
+-----------
+hpc10 : off
+-----------
+Resource group: 
 Cluster nodes:
 Total nodes: 0
+Cluster Name: hpc10
+Project version: 3.0.10
+Slurm version:  24.05.4-2
+[vinil@ccvm cyclecloud]$ 
 ```
+please make a note of the Cluster Name, Project version and Slurm version. which you will be using the next steps.
+
 
 ### 2. Preparing Scheduler VM:
 

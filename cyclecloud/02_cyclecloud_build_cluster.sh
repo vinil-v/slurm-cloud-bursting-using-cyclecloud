@@ -6,8 +6,6 @@
 set -e
 read -p "Enter Cluster Name: " CLUSTER_NAME
 echo "Cluster Name: $CLUSTER_NAME"
-
-SLURM_VERSION=$(grep -A8 "parameter configuration_slurm_version" slurm-${RELEASE_VERSION}/templates/slurm-headless.txt | grep DefaultValue | cut -d"=" -f2)
 output=$(sudo /opt/cycle_server/cycle_server execute -format json 'SELECT * FROM Cloud.Project WHERE Name=="slurm"')
 
 # Extract versions using grep and awk
@@ -21,9 +19,12 @@ if [ -z "$versions" ]; then
     # Find the latest version
     RELEASE_VERSION=$(echo "$versions" | sort -V | tail -n 1)
 
+SLURM_VERSION=$(grep -A8 "parameter configuration_slurm_version" slurm-${RELEASE_VERSION}/templates/slurm-headless.txt | grep DefaultValue | cut -d"=" -f2)
 echo "Importing Cluster"
-cyclecloud import_cluster $CLUSTER_NAME -c Slurm_HL -f slurm-headless.txt
+cyclecloud import_cluster $CLUSTER_NAME -c Slurm_HL -f slurm-${RELEASE_VERSION}/templates/slurm-headless.txt
 
+echo "Please make a note of the following details:"
+echo "-------------------------------------------"
 echo "Cluster Name: $CLUSTER_NAME"
 echo "Project version: $RELEASE_VERSION"
 echo "Slurm version: $SLURM_VERSION"
