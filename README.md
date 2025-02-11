@@ -90,35 +90,67 @@ please make a note of the Cluster Name, Project version and Slurm version. which
 ### 2. Preparing Scheduler VM:
 
 - Deploy a VM using the specified AlmaLinux image (If you have an existing Slurm Scheduler, you can skip this).
-- Run the Slurm scheduler installation script (`slurm-scheduler-builder.sh`) and provide the cluster name (`hpc1`) when prompted.
+- Run the Slurm scheduler installation script (`sh 01_slurm-scheduler-builder.sh`) and provide the cluster name and the slurm version when prompted.
+- Cluster Name and Slurm version should be same taken from the previous step.
 - This script will install and configure Slurm Scheduler.
 
 ```bash
-git clone -b 1.0.0  https://github.com/vinil-v/slurm-cloud-bursting-using-cyclecloud.git
-cd slurm-cloud-bursting-using-cyclecloud/scripts
-sh slurm-scheduler-builder.sh
+git clone https://github.com/vinil-v/slurm-cloud-bursting-using-cyclecloud.git
+cd  slurm-cloud-bursting-using-cyclecloud/scheduler/
+sh 01_slurm-scheduler-builder.sh
 ```
 Output 
 
 ```bash
+[root@scheduler scheduler]# sh 01_slurm-scheduler-builder.sh 
 ------------------------------------------------------------------------------------------------------------------------------
 Building Slurm scheduler for cloud bursting with Azure CycleCloud
 ------------------------------------------------------------------------------------------------------------------------------
-
-Enter Cluster Name: hpc1
+ 
+Enter Cluster Name: hpc10
+Enter the Slurm version to install (You get this from the cyclecloud_build_cluster.sh): 24.05.4-2                                            
 ------------------------------------------------------------------------------------------------------------------------------
-
+ 
 Summary of entered details:
-Cluster Name: hpc1
-Scheduler Hostname: masternode2
-NFSServer IP Address: 10.222.1.26
+--------------------------
+Cluster Name: hpc10
+Scheduler Hostname: scheduler
+NFS Server IP Address: XX.XXX.X.X
+ 
+ Please Note down the above details for configuring cyclecloud UI
+------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------
+Creating Munge and Slurm users
+------------------------------------------------------------------------------------------------------------------------------
+Munge and Slurm users created
+------------------------------------------------------------------------------------------------------------------------------
+Setting up NFS server
+------------------------------------------------------------------------------------------------------------------------------
+<--- truncated output --->
+------------------------------------------------------------------------------------------------------------------------------
+Slurm installed
+------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------
+Configuring Slurm
+------------------------------------------------------------------------------------------------------------------------------
+ 
+------------------------------------------------------------------------------------------------------------------------------
+Slurm configured
+------------------------------------------------------------------------------------------------------------------------------
+ 
+------------------------------------------------------------------------------------------------------------------------------
+ Go to CycleCloud Portal and edit the hpc10 cluster configuration to use the external scheduler and start the cluster.
+ Use XX.XXX.X.X IP Address for File-system Mount for /sched and /shared in Network Attached Storage section in CycleCloud GUI 
+ Once the cluster is started, proceed to run  cyclecloud-integrator.sh script to complete the integration with CycleCloud.
+------------------------------------------------------------------------------------------------------------------------------
+ 
 ```
 
 ### 3. CycleCloud UI:
 
-- Access the CycleCloud UI, edit the `hpc1` cluster settings, and configure VM SKUs and networking settings.
+- Access the CycleCloud UI, edit the `hpc10` cluster settings, and configure VM SKUs and networking settings.
 - Enter the NFS server IP address for `/sched` and `/shared` mounts in the Network Attached Storage section.
-- Save & Start `hpc1` cluster
+- Save & Start `hpc10` cluster
 
 ![NFS settings](images/NFSSettings.png)
 
