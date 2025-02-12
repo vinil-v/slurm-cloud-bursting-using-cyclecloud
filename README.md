@@ -61,13 +61,29 @@ This above output shows the Cyclecloud-Slurm Project version available in your c
         [[[parameter SchedulerZone]]]
         [[[parameter SchedulerHAZone]]]
         ```
+- if you are using Ubuntu os then you need add the following slurm and munge users and ids in the template under [[node defaults]] and [[[configuration]]] section.
+
+```bash    
+[[node defaults]]     
+    [[[configuration]]]
+    ....
+        #slum and munge users and setting their ids
+        slurm.user.name = slurm
+        slurm.user.uid = 11100
+        slurm.user.gid = 11100
+        munge.user.name = munge
+        munge.user.uid = 11101
+        munge.user.gid = 11101
+```
+
 - Once the headless template is prepared then run `sh 02_cyclecloud_build_cluster.sh` script to import the headless cluster to cyclecloud.
 ```bash
 sh 02_cyclecloud_build_cluster.sh
 ```
-Output:
-```bash
 
+Output:
+
+```bash
 [vinil@ccvm cyclecloud]$ sh 02_cyclecloud_build_cluster.sh 
 Enter Cluster Name: hpc10
 Cluster Name: hpc10
@@ -254,3 +270,4 @@ For further details and advanced configurations, refer to the scripts and docume
 ---
 
 These instructions provide a comprehensive guide for setting up Slurm bursting with CycleCloud on Azure. If you encounter any issues or have questions, please refer to the provided scripts and documentation for troubleshooting steps. Happy bursting!
+NOTE: Lockdown environment need additional changes in the way we use the project and configure it. These are tested in the non-lockdown scenarios.
