@@ -236,6 +236,7 @@ echo "--------------------------------------------------------------------------
 dd if=/dev/urandom bs=1 count=1024 > "$munge_key"
 chown munge:munge "$munge_key"
 chmod 400 "$munge_key"
+systemctl stop munge
 systemctl start munge
 systemctl enable munge
 mkdir -p "$sched_dir"

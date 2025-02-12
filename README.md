@@ -10,7 +10,7 @@ Slurm bursting enables the extension of your on-premises Slurm cluster into Azur
 
 Ensure you have the following prerequisites in place:
 
-- **OS Version**: AlmaLinux HPC & Ubuntu HPC
+- **OS Version**: AlmaLinux HPC 8.x & Ubuntu HPC 20.04 , Ubuntu HPC 22.04
 - **CycleCloud Version**: 8.x
 - **cyclecloud-slurm Project**: 3.0.x
 
