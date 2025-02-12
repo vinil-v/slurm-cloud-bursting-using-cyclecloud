@@ -41,11 +41,36 @@ echo "--------------------------------------------------------------------------
 echo "Creating Munge and Slurm users"
 echo "------------------------------------------------------------------------------------------------------------------------------"
 
-groupadd -g 11101 munge
-useradd -u 11101 -g 11101 -s /bin/false -M munge
-groupadd -g 11100 slurm
-useradd -u 11100 -g 11100 -s /bin/false -M slurm
-echo "Munge and Slurm users created"
+
+# Function to create a group if it does not exist
+create_group() {
+    if ! getent group "$1" >/dev/null; then
+        groupadd -g "$2" "$1"
+        echo "Group $1 created."
+    else
+        echo "Group $1 already exists."
+    fi
+}
+
+# Function to create a user if it does not exist
+create_user() {
+    if ! id "$1" >/dev/null 2>&1; then
+        useradd -u "$2" -g "$3" -s /bin/false -M "$1"
+        echo "User $1 created."
+    else
+        echo "User $1 already exists."
+    fi
+}
+
+# Create groups and users
+create_group "munge" 11101
+create_user "munge" 11101 11101
+
+create_group "slurm" 11100
+create_user "slurm" 11100 11100
+
+echo "Munge and Slurm user setup complete."
+echo "------------------------------------------------------------------------------------------------------------------------------"
 
 # Set up NFS server
 echo "------------------------------------------------------------------------------------------------------------------------------"
@@ -64,6 +89,24 @@ case "$OS_ID" in
         ;;
 esac
 mkdir -p /sched /shared
+# Function to add an NFS entry if it doesn't exist
+add_entry() {
+    local entry=$1
+    local file="/etc/exports"
+
+    if ! grep -qF "$entry" "$file"; then
+        echo "$entry" >> "$file"
+        echo "Added: $entry"
+    else
+        echo "Already exists: $entry"
+    fi
+}
+# Add the required entries
+add_entry "/sched *(rw,sync,no_root_squash)"
+add_entry "/shared *(rw,sync,no_root_squash)"
+
+echo "NFS exports setup complete."
+
 echo "/sched *(rw,sync,no_root_squash)" >> /etc/exports
 echo "/shared *(rw,sync,no_root_squash)" >> /etc/exports
 systemctl start nfs-server.service
