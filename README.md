@@ -61,7 +61,7 @@ This above output shows the Cyclecloud-Slurm Project version available in your c
         [[[parameter SchedulerZone]]]
         [[[parameter SchedulerHAZone]]]
         ```
-- if you are using Ubuntu os then you need add the following slurm and munge users and ids in the template under [[node defaults]] and [[[configuration]]] section.
+- If you are using Ubuntu HPC OS then you need add the following slurm and munge users and ids in the template under `[[node defaults]]` and `[[[configuration]]]` section.
 
 ```bash    
 [[node defaults]]     
