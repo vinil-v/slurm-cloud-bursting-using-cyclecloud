@@ -175,8 +175,14 @@ EOF
 
         # Determine Slurm repository based on Ubuntu version
         case "$UBUNTU_VERSION" in
-        "22.04") REPO="slurm-ubuntu-jammy" ;;
-        *) REPO="slurm-ubuntu-focal" ;;
+        "22.04") 
+        REPO="slurm-ubuntu-jammy"
+        ln -sf /lib/x86_64-linux-gnu/libtinfo.so.6.3 /usr/lib/x86_64-linux-gnu/libtinfo.so.6
+         ;;
+        "20.04") 
+        REPO="slurm-ubuntu-focal" 
+        ln -sf /lib/x86_64-linux-gnu/libtinfo.so.6.2 /usr/lib/x86_64-linux-gnu/libtinfo.so.6
+        ;;
         esac
 
         echo "Using Slurm repository: $REPO"
@@ -218,10 +224,8 @@ EOF
 	ln -sf /lib/x86_64-linux-gnu/libreadline.so.8 /usr/lib/x86_64-linux-gnu/libreadline.so.7
         ln -sf /lib/x86_64-linux-gnu/libhistory.so.8 /usr/lib/x86_64-linux-gnu/libhistory.so.7
         ln -sf /lib/x86_64-linux-gnu/libncurses.so.6 /usr/lib/x86_64-linux-gnu/libncurses.so.6
-        ln -sf /lib/x86_64-linux-gnu/libtinfo.so.6.2 /usr/lib/x86_64-linux-gnu/libtinfo.so.6
         ln -sf /usr/lib64/libslurm.so.38 /usr/lib/x86_64-linux-gnu/
         ;;
-
     *)
         echo "Unsupported OS: $OS_ID"
         exit 1
