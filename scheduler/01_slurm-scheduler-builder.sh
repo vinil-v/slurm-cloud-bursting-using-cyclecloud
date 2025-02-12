@@ -90,20 +90,25 @@ case "$OS_ID" in
 esac
 mkdir -p /sched /shared
 # Function to add an NFS entry if it doesn't exist
-add_entry() {
-    local entry=$1
-    local file="/etc/exports"
+# Define the entries
+entry1="/sched *(rw,sync,no_root_squash)"
+entry2="/shared *(rw,sync,no_root_squash)"
+file="/etc/exports"
 
-    if ! grep -qF "$entry" "$file"; then
-        echo "$entry" >> "$file"
-        echo "Added: $entry"
+# Function to check and add entry
+add_entry() {
+    grep -Fxq "$1" "$file"
+    if [ $? -ne 0 ]; then
+        echo "$1" >> "$file"
+        echo "Added: $1"
     else
-        echo "Already exists: $entry"
+        echo "Already exists: $1"
     fi
 }
-# Add the required entries
-add_entry "/sched *(rw,sync,no_root_squash)"
-add_entry "/shared *(rw,sync,no_root_squash)"
+
+# Check and add entries
+add_entry "$entry1"
+add_entry "$entry2"
 
 echo "NFS exports setup complete."
 
