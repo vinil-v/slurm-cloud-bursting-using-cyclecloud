@@ -51,147 +51,29 @@ echo "Munge and Slurm users created"
 echo "------------------------------------------------------------------------------------------------------------------------------"
 echo "Setting up NFS server"
 echo "------------------------------------------------------------------------------------------------------------------------------"
-case "$OS_ID" in
-    almalinux)
-        dnf install -y nfs-utils
-        ;;
-    ubuntu)
-        apt-get update && apt-get install -y nfs-kernel-server
-        ;;
-    *)
-        echo "Unsupported OS: $OS_ID"
-        exit 1
-        ;;
-esac
+yum install -y nfs-utils
 mkdir -p /sched /shared
 echo "/sched *(rw,sync,no_root_squash)" >> /etc/exports
 echo "/shared *(rw,sync,no_root_squash)" >> /etc/exports
 systemctl start nfs-server.service
 systemctl enable nfs-server.service
-exports -rv
 echo "NFS server setup complete"
 showmount -e localhost
 
-# setting up Microsoft repo and installing Packages
+# setting up Microsoft repo
 echo "------------------------------------------------------------------------------------------------------------------------------"
-echo "Setting up Microsoft repo and installing Slurm packages"
-echo "------------------------------------------------------------------------------------------------------------------------------"
-case "$OS_ID" in
-    almalinux)
-        # Setup Microsoft repository if not already present
-        if [ ! -e /etc/yum.repos.d/microsoft-prod.repo ]; then
-            echo "Setting up Microsoft repository..."
-            curl -sSL -O https://packages.microsoft.com/config/rhel/$OS_VERSION/packages-microsoft-prod.rpm        
-            rpm -i packages-microsoft-prod.rpm
-            rm -f packages-microsoft-prod.rpm
-            echo "Microsoft repo setup complete."
-        fi
-
-        # Setup Slurm repository
-        echo "Setting up Slurm repository..."
-        cat <<EOF > /etc/yum.repos.d/slurm.repo
-[slurm]
-name=Slurm Workload Manager
-baseurl=https://packages.microsoft.com/yumrepos/slurm-el8-insiders
-enabled=1
-gpgcheck=1
-gpgkey=https://packages.microsoft.com/keys/microsoft.asc
-priority=10
-EOF
-        echo "Slurm repo setup complete."
-        echo "Installing munge packages..."
-        dnf install -y epel-release
-        dnf install -y munge munge-libs
-        echo "Munge installed"
-        echo "Installing Slurm packages..."
-        slurm_packages="slurm slurm-slurmrestd slurm-libpmi slurm-devel slurm-pam_slurm slurm-perlapi slurm-torque slurm-openlava slurm-example-configs"
-        sched_packages="slurm-slurmctld slurm-slurmdbd"
-        for pkg in $slurm_packages; do
-                yum -y install $pkg-${SLURM_VERSION}.el${OS_VERSION} --disableexcludes slurm
-        done
-        for pkg in $sched_packages; do
-                yum -y install $pkg-${SLURM_VERSION}.el${OS_VERSION} --disableexcludes slurm
-        done
-        echo "Slurm installed"
-        ;;
-
-    ubuntu)
-        echo "Updating package lists..."
-        apt update
-
-        # Extract Ubuntu version
-        UBUNTU_VERSION=$(echo "$VERSION_ID" | cut -d. -f1)
-
-        # Install python3-venv if Ubuntu version is greater than 19
-        if [ "$UBUNTU_VERSION" -gt 19 ]; then
-            echo "Installing Python3 virtual environment..."
-            apt -y install python3-venv
-        fi
-
-        # Install required dependencies
-        echo "Installing required packages and munge..."
-        apt -y install munge libmysqlclient-dev libssl-dev jq
-
-        # Determine Slurm repository based on Ubuntu version
-        if [ $UBUNTU_VERSION == 22.04 ]; then
-        REPO=slurm-ubuntu-jammy
-        else
-        REPO=slurm-ubuntu-focal
-        fi
-
-        # Add Slurm repository
-        echo "Configuring Slurm repository..."
-        echo "deb [arch=amd64] https://packages.microsoft.com/repos/$REPO/ insiders main" > /etc/apt/sources.list.d/slurm.list
-
-        # Set repository priorities
-        cat <<EOF > /etc/apt/preferences.d/slurm-repository-pin-990
-Package: slurm, slurm-*
-Pin: origin "packages.microsoft.com"
-Pin-Priority: 990
-
-Package: slurm, slurm-*
-Pin: origin *ubuntu.com*
-Pin-Priority: -1
-EOF
-        echo "Slurm repository setup complete."
-
-        # Setup Microsoft repository if not already present
-        if [ ! -e /etc/apt/sources.list.d/microsoft-prod.list ]; then
-            echo "Setting up Microsoft repository..."
-            curl -sSL -O https://packages.microsoft.com/config/ubuntu/$UBUNTU_VERSION/packages-microsoft-prod.deb
-            dpkg -i packages-microsoft-prod.deb
-            rm -f packages-microsoft-prod.deb
-            echo "Microsoft repo setup complete."
-        fi
-        apt update
-        slurm_packages="slurm-smd slurm-smd-client slurm-smd-dev slurm-smd-libnss-slurm slurm-smd-libpam-slurm-adopt slurm-smd-slurmrestd slurm-smd-sview"
-        for pkg in $slurm_packages; do
-                apt install -y $pkg=$SLURM_VERSION
-                apt-mark hold $pkg
-        done
-
-        apt install -y slurm-smd-slurmctld=$SLURM_VERSION slurm-smd-slurmdbd=$SLURM_VERSION
-        apt-mark hold slurm-smd-slurmctld slurm-smd-slurmdbd
-	apt install -y libhwloc15
-	ln -sf /lib/x86_64-linux-gnu/libreadline.so.8 /usr/lib/x86_64-linux-gnu/libreadline.so.7
-        ln -sf /lib/x86_64-linux-gnu/libhistory.so.8 /usr/lib/x86_64-linux-gnu/libhistory.so.7
-        ln -sf /lib/x86_64-linux-gnu/libncurses.so.6 /usr/lib/x86_64-linux-gnu/libncurses.so.6
-        ln -sf /lib/x86_64-linux-gnu/libtinfo.so.6.2 /usr/lib/x86_64-linux-gnu/libtinfo.so.6
-        ln -sf /usr/lib64/libslurm.so.38 /usr/lib/x86_64-linux-gnu/
-        ;;
-
-    *)
-        echo "Unsupported OS: $OS_ID"
-        exit 1
-        ;;
-esac
-echo "------------------------------------------------------------------------------------------------------------------------------"
-
-
+if [ ! -e /etc/yum.repos.d/microsoft-prod.repo ];then
+   curl -sSL -O https://packages.microsoft.com/config/rhel/$OS_VERSION/packages-microsoft-prod.rpm        
+   rpm -i packages-microsoft-prod.rpm
+   rm -rf packages-microsoft-prod.rpm
+   echo "Microsoft repo setup complete"
+fi
 # Install and configure Munge
 echo "------------------------------------------------------------------------------------------------------------------------------"
-echo "configuring Munge"
+echo "Installing and configuring Munge"
 echo "------------------------------------------------------------------------------------------------------------------------------"
+dnf install -y epel-release
+dnf install -y munge munge-libs
 dd if=/dev/urandom bs=1 count=1024 > "$munge_key"
 chown munge:munge "$munge_key"
 chmod 400 "$munge_key"
@@ -202,7 +84,37 @@ cp "$munge_key" "$sched_dir/munge.key"
 chown munge: "$sched_dir/munge.key"
 chmod 400 "$sched_dir/munge.key"
 echo "------------------------------------------------------------------------------------------------------------------------------"
-echo "Munge configured"
+echo "Munge installed and configured"
+echo "------------------------------------------------------------------------------------------------------------------------------"
+
+# Install and configure Slurm
+echo "------------------------------------------------------------------------------------------------------------------------------"
+echo " Setting up Slurm repo"
+cat <<EOF > /etc/yum.repos.d/slurm.repo
+[slurm]
+name=Slurm Workload Manager
+baseurl=https://packages.microsoft.com/yumrepos/slurm-el8-insiders
+enabled=1
+gpgcheck=1
+gpgkey=https://packages.microsoft.com/keys/microsoft.asc
+priority=10
+EOF
+echo "Slurm repo setup complete"
+echo " "
+echo "------------------------------------------------------------------------------------------------------------------------------"
+echo "Installing Slurm"
+echo "------------------------------------------------------------------------------------------------------------------------------"
+
+slurm_packages="slurm slurm-slurmrestd slurm-libpmi slurm-devel slurm-pam_slurm slurm-perlapi slurm-torque slurm-openlava slurm-example-configs"
+sched_packages="slurm-slurmctld slurm-slurmdbd"
+for pkg in $slurm_packages; do
+        yum -y install $pkg-${SLURM_VERSION}.el${OS_VERSION} --disableexcludes slurm
+done
+for pkg in $sched_packages; do
+        yum -y install $pkg-${SLURM_VERSION}.el${OS_VERSION} --disableexcludes slurm
+done
+echo "------------------------------------------------------------------------------------------------------------------------------"
+echo "Slurm installed"
 echo "------------------------------------------------------------------------------------------------------------------------------"
 
 
