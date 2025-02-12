@@ -174,7 +174,7 @@ EOF
         apt -y install munge libmysqlclient-dev libssl-dev jq
 
         # Determine Slurm repository based on Ubuntu version
-        if [ $UBUNTU_VERSION == 22.04 ]; then
+        if [ $UBUNTU_VERSION == "22.04" ]; then
         REPO=slurm-ubuntu-jammy
         else
         REPO=slurm-ubuntu-focal
