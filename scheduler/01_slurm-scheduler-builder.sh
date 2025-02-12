@@ -166,12 +166,12 @@ EOF
         # Install python3-venv if Ubuntu version is greater than 19
         if [ "$(echo "$UBUNTU_VERSION > 19" | bc)" -eq 1 ]; then
         echo "Installing Python3 virtual environment..."
-        apt -y install python3-venv
+        DEBIAN_FRONTEND=noninteractive apt -y install python3-venv
         fi
 
         # Install required dependencies
         echo "Installing required packages and munge..."
-        apt -y install munge libmysqlclient-dev libssl-dev jq
+        DEBIAN_FRONTEND=noninteractive apt -y install munge libmysqlclient-dev libssl-dev jq
 
         # Determine Slurm repository based on Ubuntu version
         case "$UBUNTU_VERSION" in
@@ -208,13 +208,13 @@ EOF
         apt update
         slurm_packages="slurm-smd slurm-smd-client slurm-smd-dev slurm-smd-libnss-slurm slurm-smd-libpam-slurm-adopt slurm-smd-slurmrestd slurm-smd-sview"
         for pkg in $slurm_packages; do
-                apt install -y $pkg=$SLURM_VERSION
+                DEBIAN_FRONTEND=noninteractive apt install -y $pkg=$SLURM_VERSION
                 apt-mark hold $pkg
         done
 
-        apt install -y slurm-smd-slurmctld=$SLURM_VERSION slurm-smd-slurmdbd=$SLURM_VERSION
+        DEBIAN_FRONTEND=noninteractive apt install -y slurm-smd-slurmctld=$SLURM_VERSION slurm-smd-slurmdbd=$SLURM_VERSION
         apt-mark hold slurm-smd-slurmctld slurm-smd-slurmdbd
-	apt install -y libhwloc15
+	DEBIAN_FRONTEND=noninteractive apt install -y libhwloc15
 	ln -sf /lib/x86_64-linux-gnu/libreadline.so.8 /usr/lib/x86_64-linux-gnu/libreadline.so.7
         ln -sf /lib/x86_64-linux-gnu/libhistory.so.8 /usr/lib/x86_64-linux-gnu/libhistory.so.7
         ln -sf /lib/x86_64-linux-gnu/libncurses.so.6 /usr/lib/x86_64-linux-gnu/libncurses.so.6
