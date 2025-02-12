@@ -58,7 +58,7 @@ echo "--------------------------------------------------------------------------
 echo "Configuring virtual enviornment and Activating Python virtual environment"
 echo "------------------------------------------------------------------------------------------------------------------------------"
 python3 -m venv "$slurm_script_dir/venv"
-source "$slurm_script_dir/venv/bin/activate"
+. "$slurm_script_dir/venv/bin/activate"
 
 # Download and install CycleCloud Slurm integration package
 echo "------------------------------------------------------------------------------------------------------------------------------"

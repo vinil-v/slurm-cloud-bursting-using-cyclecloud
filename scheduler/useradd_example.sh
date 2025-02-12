@@ -25,7 +25,9 @@ if ! getent group $gid >/dev/null; then
 fi
 
 # Create user with specified uid, gid, home directory, and shell
+mkdir -p /shared/home/$username
 useradd -g $gid -u $uid -d /shared/home/$username -s /bin/bash $username
+chown -R $username:$username /shared/home/$username
 
 # Switch to user to perform directory and file operations
 su - $username -c "mkdir -p /shared/home/$username/.ssh"
