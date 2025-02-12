@@ -107,8 +107,6 @@ add_entry "/shared *(rw,sync,no_root_squash)"
 
 echo "NFS exports setup complete."
 
-echo "/sched *(rw,sync,no_root_squash)" >> /etc/exports
-echo "/shared *(rw,sync,no_root_squash)" >> /etc/exports
 systemctl start nfs-server.service
 systemctl enable nfs-server.service
 exportfs -rv
