@@ -22,7 +22,10 @@ read -p "Enter Cluster Name: " cluster_name
 read -p "Enter CycleCloud Username: " username
 
 # Prompt for Password (masked input)
-read -s -p "Enter CycleCloud Password: " password
+echo "Enter CycleCloud Password: "
+stty -echo
+read password
+stty echo
 echo ""  # Move to a new line after password input
 
 read -p "Enter the Project version: " slurm_autoscale_pkg_version
