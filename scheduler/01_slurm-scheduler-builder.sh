@@ -120,7 +120,7 @@ EOF
         apt update
 
         # Extract Ubuntu version
-        UBUNTU_VERSION=$(echo "$VERSION_ID" | cut -d. -f1)
+        UBUNTU_VERSION=$(cat /etc/os-release | grep VERSION_ID | cut -d= -f2 | cut -d\" -f2)
 
         # Install python3-venv if Ubuntu version is greater than 19
         if [ "$UBUNTU_VERSION" -gt 19 ]; then
