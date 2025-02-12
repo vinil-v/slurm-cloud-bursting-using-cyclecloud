@@ -68,7 +68,7 @@ echo "/sched *(rw,sync,no_root_squash)" >> /etc/exports
 echo "/shared *(rw,sync,no_root_squash)" >> /etc/exports
 systemctl start nfs-server.service
 systemctl enable nfs-server.service
-exports -rv
+exportfs -rv
 echo "NFS server setup complete"
 showmount -e localhost
 
