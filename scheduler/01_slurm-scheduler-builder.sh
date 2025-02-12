@@ -161,12 +161,12 @@ EOF
         apt update
 
         # Extract Ubuntu version
-        UBUNTU_VERSION=$(cat /etc/os-release | grep VERSION_ID | cut -d= -f2 | cut -d\" -f2)
+        UBUNTU_VERSION=$(grep -oP '(?<=VERSION_ID=")[0-9.]+' /etc/os-release)
 
         # Install python3-venv if Ubuntu version is greater than 19
-        if [ "$UBUNTU_VERSION" -gt 19 ]; then
-            echo "Installing Python3 virtual environment..."
-            apt -y install python3-venv
+        if [ "$(echo "$UBUNTU_VERSION > 19" | bc)" -eq 1 ]; then
+        echo "Installing Python3 virtual environment..."
+        apt -y install python3-venv
         fi
 
         # Install required dependencies
@@ -174,11 +174,12 @@ EOF
         apt -y install munge libmysqlclient-dev libssl-dev jq
 
         # Determine Slurm repository based on Ubuntu version
-        if [ $UBUNTU_VERSION == "22.04" ]; then
-        REPO=slurm-ubuntu-jammy
-        else
-        REPO=slurm-ubuntu-focal
-        fi
+        case "$UBUNTU_VERSION" in
+        "22.04") REPO="slurm-ubuntu-jammy" ;;
+        *) REPO="slurm-ubuntu-focal" ;;
+        esac
+
+        echo "Using Slurm repository: $REPO"
 
         # Add Slurm repository
         echo "Configuring Slurm repository..."
