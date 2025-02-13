@@ -6,13 +6,15 @@ This repository provides detailed instructions and scripts for setting up Slurm 
 
 Slurm bursting enables the extension of your on-premises Slurm cluster into Azure for flexible and scalable compute capacity. CycleCloud simplifies the management and provisioning of cloud resources, bridging your local infrastructure with cloud environments.
 
-## Requirements
 
-Ensure you have the following prerequisites in place:
+## Prerequisites  
 
-- **OS Version**: AlmaLinux HPC 8.x & Ubuntu HPC 20.04 , Ubuntu HPC 22.04
-- **CycleCloud Version**: 8.x
-- **cyclecloud-slurm Project**: 3.0.x
+Before proceeding, ensure you have the following requirements in place:  
+
+- **Operating System:** AlmaLinux HPC 8.x, Ubuntu HPC 20.04, or Ubuntu HPC 22.04 (Supported platform images in CycleCloud)  
+- **CycleCloud Version:** 8.x  
+- **CycleCloud-Slurm Project:** 3.0.x  
+- **CycleCloud Server:** Must be up and running, and accessible via the `cyclecloud` CLI.
 
 ## Setup Instructions
 
