@@ -11,9 +11,9 @@ Slurm bursting enables the extension of your on-premises Slurm cluster into Azur
 
 Before proceeding, ensure you have the following requirements in place:  
 
-- **Operating System:** AlmaLinux HPC 8.x, Ubuntu HPC 20.04, or Ubuntu HPC 22.04 (Supported platform images in CycleCloud)  
-- **CycleCloud Version:** 8.x  
-- **CycleCloud-Slurm Project:** 3.0.x  
+- **Operating System:** `AlmaLinux HPC 8.x`, `Ubuntu HPC 20.04`, and `Ubuntu HPC 22.04` (Supported platform images in CycleCloud)  
+- **CycleCloud Version:** `8.x`  
+- **CycleCloud-Slurm Project:** `3.0.x`  
 - **CycleCloud Server:** Must be up and running, and accessible via the `cyclecloud` CLI.
 
 ## Setup Instructions
