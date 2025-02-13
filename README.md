@@ -278,4 +278,4 @@ For further details and advanced configurations, refer to the scripts and docume
 
 These instructions provide a comprehensive guide for setting up Slurm bursting with CycleCloud on Azure. If you encounter any issues or have questions, please refer to the provided scripts and documentation for troubleshooting steps. Happy bursting!
 
-NOTE: Lockdown environment need additional changes in the way we use the project and configure it. These are tested in the non-lockdown scenarios.
+**NOTE:** Lockdown environment need additional changes in the way we use the project and configure it. These are tested in the non-lockdown scenarios.
