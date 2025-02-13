@@ -21,7 +21,7 @@ if [ -z "$versions" ]; then
 
 SLURM_VERSION=$(grep -A8 "parameter configuration_slurm_version" slurm-${RELEASE_VERSION}/templates/slurm-headless.txt | grep DefaultValue | cut -d"=" -f2)
 echo "Importing Cluster"
-cyclecloud import_cluster $CLUSTER_NAME -c Slurm_HL -f slurm-${RELEASE_VERSION}/templates/slurm-headless.txt
+cyclecloud import_cluster $CLUSTER_NAME -c Slurm -f slurm-${RELEASE_VERSION}/templates/slurm-headless.txt
 
 echo "Please make a note of the following details:"
 echo "-------------------------------------------"
