@@ -44,7 +44,7 @@ Please refer README for customizing the template for Headless Slurm cluster
 This above output shows the Cyclecloud-Slurm Project version available in your cyclecloud enviorment, supported slurm version in the project and the template for creating headless slurm cluster.
 
 - Edit the template from the given template location (`Template location : slurm-3.0.10/templates/slurm-headless.txt`) using your favorite edior and make the following adjustment to create a headless template.
-    - Update the [cluster Slurm] to [cluster Slurm_HL] for refering as a Headless Cluster template.
+    - Update the `[cluster Slurm]` to `[cluster Slurm_HL]` for refering as a Headless Cluster template.
     - Remove the following sections completely in the template to prepare a headless template.
 
         ```bash
