@@ -47,22 +47,22 @@ This above output shows the Cyclecloud-Slurm Project version available in your c
 - Remove the following sections completely in the template to prepare a headless template.
 
         ```bash
-        slurm.ha_enabled = $configuration_slurm_ha_enabled
+       
         [[node scheduler]]
         [[nodearray scheduler-ha]]
         [[nodearray login]]
         [[[parameter SchedulerMachineType]]]
         [[[parameter loginMachineType]]]
         [[[parameter NumberLoginNodes]]]
-        [[parameters High Availability]]
-        [[[parameter configuration_slurm_ha_enabled]]]
         [[[parameter SchedulerHostName]]]
         [[[parameter SchedulerImageName]]]
+        [[[parameter LoginImageName]]]
         [[[parameter SchedulerClusterInitSpecs]]]
+        [[[parameter LoginClusterInitSpecs]]]
         [[[parameter SchedulerZone]]]
         [[[parameter SchedulerHAZone]]]
         ```
-- Add the following `slurm` and `munge` uid and gid in to the template under `[[node defaults]]` and `[[[configuration]]]` section. This is to keep the munge and slurm uid and gid same as the scheduler.
+-  Ensure that the `slurm` and `munge` UID and GID are included in the template under the `[[node defaults]]` and `[[[configuration]]]` sections if they are not already present. This ensures consistency with the scheduler's UID and GID for `munge` and `slurm`.
 
 ```bash    
 [[node defaults]]     
