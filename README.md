@@ -44,6 +44,20 @@ Please refer README for customizing the template for Headless Slurm cluster
 This above output shows the Cyclecloud-Slurm Project version available in your cyclecloud enviorment, supported slurm version in the project and the template for creating headless slurm cluster.
 
 - Edit the template from the given template location (`Template location : slurm-3.0.10/templates/slurm-headless.txt`) using your favorite edior and make the following adjustment to create a headless template.
+- Ensure that the `slurm` and `munge` UID and GID are included in the template under the `[[node defaults]]` and `[[[configuration]]]` sections if they are not already present. This ensures consistency with the scheduler's UID and GID for `munge` and `slurm`.
+
+```bash    
+[[node defaults]]     
+    [[[configuration]]]
+    ....
+        #slum and munge users and setting their ids
+        slurm.user.name = slurm
+        slurm.user.uid = 11100
+        slurm.user.gid = 11100
+        munge.user.name = munge
+        munge.user.uid = 11101
+        munge.user.gid = 11101
+```
 - Remove the following sections completely in the template to prepare a headless template.
 
  ```bash    
@@ -61,20 +75,7 @@ This above output shows the Cyclecloud-Slurm Project version available in your c
         [[[parameter SchedulerZone]]]
         [[[parameter SchedulerHAZone]]]
 ```
--  Ensure that the `slurm` and `munge` UID and GID are included in the template under the `[[node defaults]]` and `[[[configuration]]]` sections if they are not already present. This ensures consistency with the scheduler's UID and GID for `munge` and `slurm`.
 
-```bash    
-[[node defaults]]     
-    [[[configuration]]]
-    ....
-        #slum and munge users and setting their ids
-        slurm.user.name = slurm
-        slurm.user.uid = 11100
-        slurm.user.gid = 11100
-        munge.user.name = munge
-        munge.user.uid = 11101
-        munge.user.gid = 11101
-```
 
 - Once the headless template is prepared then run `sh 02_cyclecloud_build_cluster.sh` script to import the headless cluster to cyclecloud.
 - in this example we use `hpc10` as the cluster name.
