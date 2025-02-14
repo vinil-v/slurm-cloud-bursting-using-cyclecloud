@@ -46,8 +46,7 @@ This above output shows the Cyclecloud-Slurm Project version available in your c
 - Edit the template from the given template location (`Template location : slurm-3.0.10/templates/slurm-headless.txt`) using your favorite edior and make the following adjustment to create a headless template.
 - Remove the following sections completely in the template to prepare a headless template.
 
-        ```bash
-       
+ ```bash    
         [[node scheduler]]
         [[nodearray scheduler-ha]]
         [[nodearray login]]
@@ -61,7 +60,7 @@ This above output shows the Cyclecloud-Slurm Project version available in your c
         [[[parameter LoginClusterInitSpecs]]]
         [[[parameter SchedulerZone]]]
         [[[parameter SchedulerHAZone]]]
-        ```
+```
 -  Ensure that the `slurm` and `munge` UID and GID are included in the template under the `[[node defaults]]` and `[[[configuration]]]` sections if they are not already present. This ensures consistency with the scheduler's UID and GID for `munge` and `slurm`.
 
 ```bash    
