@@ -13,8 +13,8 @@ fi
 
 # test user details
 read -p "Enter User Name: " username
-gid=20001
-uid=20001
+read -p "Enter User ID (UID): " uid
+read -p "Enter Group ID (GID): " gid
 
 mkdir -p /shared/home/
 chmod 755 /shared/home/
